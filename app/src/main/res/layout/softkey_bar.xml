@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@android:color/black">
+
+
+    <ImageButton
+        android:id="@+id/IB_button_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_sysbar_home" />
+
+    <ImageButton
+        android:id="@+id/IB_button_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/IB_button_home"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_sysbar_back" />
+
+    <ImageButton
+        android:id="@+id/IB_button_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/IB_button_home"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_sysbar_recent" />
+
+</RelativeLayout>
