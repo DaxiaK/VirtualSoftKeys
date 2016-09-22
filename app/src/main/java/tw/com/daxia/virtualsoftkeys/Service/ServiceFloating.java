@@ -1,11 +1,11 @@
 package tw.com.daxia.virtualsoftkeys.Service;
 
 import android.accessibilityservice.AccessibilityService;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
-import android.preference.PreferenceManager;
+import android.net.Uri;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -23,8 +23,10 @@ import java.util.List;
 
 import tw.com.daxia.virtualsoftkeys.R;
 
+import static tw.com.daxia.virtualsoftkeys.R.id.IB_button_menu;
 
-public class ServiceFloating extends AccessibilityService implements View.OnClickListener {
+
+public class ServiceFloating extends AccessibilityService implements View.OnClickListener, View.OnLongClickListener {
 
 
     private WindowManager windowManager;
@@ -69,20 +71,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     public void onCreate() {
         super.onCreate();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-//        RetrievePackages getInstalledPackages = new RetrievePackages(getApplicationContext());
-//        apps = getInstalledPackages.getInstalledApps(false);
-        myArray = new ArrayList<String>();
-//        for (int i = 0; i < apps.size(); ++i) {
-//            myArray.add(apps.get(i).appname);
-//        }
-//
-//        listCity = new ArrayList();
-//        for (int i = 0; i < apps.size(); ++i) {
-//            listCity.add(apps.get(i));
-//        }
-
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         LayoutInflater li = LayoutInflater.from(this);
@@ -93,6 +81,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         IB_button_back.setOnClickListener(this);
         IB_button_home = (ImageButton) chatHead.findViewById(R.id.IB_button_home);
         IB_button_home.setOnClickListener(this);
+        IB_button_home.setOnLongClickListener(this);
         IB_button_menu = (ImageButton) chatHead.findViewById(R.id.IB_button_menu);
         IB_button_menu.setOnClickListener(this);
 
@@ -151,28 +140,11 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     return false;
                 }
             });
-        } catch (
-                Exception e
-                )
-
-        {
+        } catch (Exception e) {
             // TODO: handle exception
         }
 
-//		chatHead.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				initiatePopupWindow(chatHead);
-//				_enable = false;
-//				//				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//				//				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//				//				getApplicationContext().startActivity(intent);
-//			}
-//		});
-
     }
-
 
 
     @Override
@@ -200,12 +172,40 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                 break;
             case R.id.IB_button_home:
+                Log.e("test", "onClick");
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
                 break;
-            case R.id.IB_button_menu:
+            case IB_button_menu:
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
                 break;
         }
 //        windowManager.removeView(chatHead);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.IB_button_back:
+                break;
+            case R.id.IB_button_home:
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.googlequicksearchbox");
+                if (intent != null) {
+                    // We found the activity now start the activity
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    // Bring user to the market or let them choose an app?
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    intent.setData(Uri.parse("market://details?id=" + "com.package.name"));
+                    startActivity(intent);
+                }
+                break;
+            case IB_button_menu:
+                break;
+        }
+
+        return true;
     }
 }
