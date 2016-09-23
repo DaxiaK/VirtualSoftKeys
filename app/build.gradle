@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "tw.com.daxia.virtualsoftkeys"
-        minSdkVersion 19
+        minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
