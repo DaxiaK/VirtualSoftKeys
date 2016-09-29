@@ -22,7 +22,7 @@
 
 
         <service
-            android:name=".Service.ServiceFloating"
+            android:name=".service.ServiceFloating"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

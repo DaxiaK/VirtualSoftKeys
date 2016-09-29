@@ -25,7 +25,7 @@
         android:src="@drawable/ic_sysbar_back" />
 
     <ImageButton
-        android:id="@+id/IB_button_menu"
+        android:id="@+id/IB_button_recents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

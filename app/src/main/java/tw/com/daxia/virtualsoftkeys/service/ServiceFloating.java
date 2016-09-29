@@ -1,4 +1,4 @@
-package tw.com.daxia.virtualsoftkeys.Service;
+package tw.com.daxia.virtualsoftkeys.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.Service;
@@ -19,9 +19,6 @@ import android.widget.ImageButton;
 
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
-
-import static tw.com.daxia.virtualsoftkeys.R.id.IB_button_menu;
-
 
 public class ServiceFloating extends AccessibilityService implements View.OnClickListener, View.OnLongClickListener {
 
@@ -59,6 +56,17 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     }
 
     @Override
+    protected void onServiceConnected() {
+        Log.e("test", "onServiceConnected");
+        super.onServiceConnected();
+//        AccessibilityServiceInfo info = new AccessibilityServiceInfo();
+//        info.flags = AccessibilityServiceInfo.DEFAULT;
+//        info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK;
+//        info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
+//        setServiceInfo(info);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
 
@@ -84,7 +92,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//                    Log.e("test", "Count = " + event.getPointerCount());
+                Log.e("test", "Count = " + event.getPointerCount());
 //                    Log.e("test", "getToolType = " + event.getToolType(0));
 //                    if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
                 switch (event.getAction()) {
@@ -126,7 +134,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.e("test", event.getPackageName().toString());
+        Log.e("test", "event = " + event.getEventType());
     }
 
     @Override
@@ -135,31 +143,30 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     }
 
     private void showSoftKeyBar() {
-        LayoutInflater li = LayoutInflater.from(this);
-        softKeyBar = li.inflate(R.layout.softkey_bar, null, false);
-
-        ImageButton IB_button_home, IB_button_back, IB_button_menu;
-        IB_button_back = (ImageButton) softKeyBar.findViewById(R.id.IB_button_back);
-        IB_button_back.setOnClickListener(this);
-        IB_button_home = (ImageButton) softKeyBar.findViewById(R.id.IB_button_home);
-        IB_button_home.setOnClickListener(this);
-        IB_button_home.setOnLongClickListener(this);
-        IB_button_menu = (ImageButton) softKeyBar.findViewById(R.id.IB_button_menu);
-        IB_button_menu.setOnClickListener(this);
-
-
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                ScreenHepler.dpToPixel(getResources(), 48),
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-
-        params.gravity = Gravity.BOTTOM;
-        params.x = 0;
-        params.y = 0;
-
-        windowManager.addView(softKeyBar, params);
+        if (softKeyBar == null) {
+            LayoutInflater li = LayoutInflater.from(this);
+            softKeyBar = li.inflate(R.layout.softkey_bar, null, true);
+            ImageButton IB_button_home, IB_button_back, IB_button_recents;
+            IB_button_back = (ImageButton) softKeyBar.findViewById(R.id.IB_button_back);
+            IB_button_back.setOnClickListener(this);
+            IB_button_home = (ImageButton) softKeyBar.findViewById(R.id.IB_button_home);
+            IB_button_home.setOnClickListener(this);
+            IB_button_home.setOnLongClickListener(this);
+            IB_button_recents = (ImageButton) softKeyBar.findViewById(R.id.IB_button_recents);
+            IB_button_recents.setOnClickListener(this);
+            final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    ScreenHepler.dpToPixel(getResources(), 48),
+                    WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+            params.gravity = Gravity.BOTTOM;
+            params.x = 0;
+            params.y = 0;
+            windowManager.addView(softKeyBar, params);
+        } else {
+            softKeyBar.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -172,13 +179,13 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             case R.id.IB_button_home:
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
                 break;
-            case IB_button_menu:
+            case R.id.IB_button_recents:
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
                 break;
         }
-//        if (softKeyBar != null && softKeyBar.getParent() != null) {
-//            windowManager.removeView(softKeyBar);
-//        }
+        if (softKeyBar != null) {
+            softKeyBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -201,7 +208,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     startActivity(intent);
                 }
                 break;
-            case IB_button_menu:
+            case R.id.IB_button_recents:
                 break;
         }
 

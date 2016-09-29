@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import tw.com.daxia.virtualsoftkeys.Service.ServiceFloating;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -96,11 +94,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.But_start_service:
                 if (checkSystemAlertWindowPermission() && checkAccessibilitySettingsPermission()) {
-                    startService(new Intent(MainActivity.this, ServiceFloating.class));
                 }
                 break;
             case R.id.But_stop_service:
-                stopService(new Intent(MainActivity.this, ServiceFloating.class));
                 break;
         }
     }
