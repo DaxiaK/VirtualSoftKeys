@@ -10,25 +10,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+
+import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
+import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private final static int SYSTEM_ALERT_WINDOW_REQUEST_CODE = 0;
     private final static String TAG = "MainActivity";
-    private Button But_start_service, But_stop_service;
+    private SeekBar Seek_touch_area;
+    private Button But_stop_service;
+    private View View_touchviewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        But_start_service = (Button) findViewById(R.id.But_start_service);
-        But_start_service.setOnClickListener(this);
+        View_touchviewer = findViewById(R.id.View_touchviewer);
+        Seek_touch_area = (SeekBar) findViewById(R.id.Seek_touch_area);
+        initSeekBar();
         But_stop_service = (Button) findViewById(R.id.But_stop_service);
         But_stop_service.setOnClickListener(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkSystemAlertWindowPermission();
+        checkAccessibilitySettingsPermission();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -44,6 +59,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
+    private void initSeekBar() {
+        Seek_touch_area.setOnSeekBarChangeListener(seekBarOnSeekBarChange);
+        Seek_touch_area.setMax(ScreenHepler.getScreenHeight(this) / 20);
+    }
+
+    private SeekBar.OnSeekBarChangeListener seekBarOnSeekBarChange = new SeekBar.OnSeekBarChangeListener() {
+
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+            if (mAccessibilityService != null) {
+                mAccessibilityService.updateTouchView(seekBar.getProgress());
+                mAccessibilityService = null;
+            }
+        }
+
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_touchviewer.getLayoutParams();
+            params.height = progress;
+            View_touchviewer.setLayoutParams(params);
+        }
+    };
+
 
     private boolean checkSystemAlertWindowPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
@@ -92,9 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.But_start_service:
-                if (checkSystemAlertWindowPermission() && checkAccessibilitySettingsPermission()) {
-                }
+            case R.id.Seek_touch_area:
                 break;
             case R.id.But_stop_service:
                 break;

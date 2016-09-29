@@ -3,7 +3,6 @@ package tw.com.daxia.virtualsoftkeys.service;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
@@ -23,111 +21,72 @@ import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 
 public class ServiceFloating extends AccessibilityService implements View.OnClickListener, View.OnLongClickListener {
 
+    private final static String GOOGLE_APP_PACKAGE_NAME = "com.google.android.googlequicksearchbox";
+
+    private static ServiceFloating sSharedInstance;
+
 
     private WindowManager windowManager;
     private View softKeyBar;
     private View touchView;
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        int orientation = getResources().getConfiguration().orientation;
-        int rotation = windowManager.getDefaultDisplay().getRotation();
-        int actual_orientation = -1;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE
-                && (rotation == Surface.ROTATION_0
-                || rotation == Surface.ROTATION_90)) {
-            orientation = Configuration.ORIENTATION_LANDSCAPE;
-        } else if (orientation == Configuration.ORIENTATION_PORTRAIT
-                && (rotation == Surface.ROTATION_0
-                || rotation == Surface.ROTATION_90)) {
-            orientation = Configuration.ORIENTATION_PORTRAIT;
-        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE
-                && (rotation == Surface.ROTATION_180
-                || rotation == Surface.ROTATION_270)) {
-            orientation = 3;//any constant for reverse landscape orientation;
-        } else {
-            if (orientation == Configuration.ORIENTATION_PORTRAIT
-                    && (rotation == Surface.ROTATION_180
-                    || rotation == Surface.ROTATION_270)) {
-                orientation = 4;//any constant for reverse portrait orientation;
-            }
-        }
-        Log.e("tset", "orientation=" + orientation);
+    public static ServiceFloating getSharedInstance() {
+        return sSharedInstance;
     }
 
     @Override
+    public boolean onUnbind(Intent intent) {
+        sSharedInstance = null;
+        return false;
+    }
+
+
+    @Override
     protected void onServiceConnected() {
-        Log.e("test", "onServiceConnected");
         super.onServiceConnected();
-//        AccessibilityServiceInfo info = new AccessibilityServiceInfo();
-//        info.flags = AccessibilityServiceInfo.DEFAULT;
-//        info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK;
-//        info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
-//        setServiceInfo(info);
+        sSharedInstance = this;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
         touchView = new View(this);
         touchView.setBackgroundColor(Color.parseColor("#74525c"));
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                ScreenHepler.dpToPixel(getResources(), 10),
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.BOTTOM;
-        params.x = 0;
-        params.y = 0;
-        windowManager.addView(touchView, params);
+        windowManager.addView(touchView, createTouchViewParms(ScreenHepler.dpToPixel(getResources(), 10)));
         touchView.setOnTouchListener(new View.OnTouchListener() {
-            private WindowManager.LayoutParams paramsF = params;
-            private int initialX;
-            private int initialY;
             private float initialTouchX;
-            private float initialTouchY;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.e("test", "Count = " + event.getPointerCount());
-//                    Log.e("test", "getToolType = " + event.getToolType(0));
-//                    if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+//
+//                if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        Log.e("test", "ACTION_DOWN");
-                        initialX = paramsF.x;
-                        initialY = paramsF.y;
                         initialTouchX = event.getRawX();
-                        initialTouchY = event.getRawY();
-                        Log.e("test", "initialX =" + initialX + " , initialY =" + initialY);
-                        Log.e("test", "initialTouchX =" + initialTouchX + " , initialTouchY =" + initialTouchY);
-
+                        Log.e("test", "initialTouchX =" + initialTouchX);
                         break;
                     case MotionEvent.ACTION_UP:
-//                                Log.e("test", "ACTION_UP");
+                        Log.e("test", "event.getRawX() =" + event.getRawX());
+                        if (event.getRawX() - initialTouchX > 10) {
+                            showSoftKeyBar();
+                        }
                         break;
                     case MotionEvent.ACTION_MOVE:
-//                                Log.e("test", "ACTION_MOVE");
-                        paramsF.x = initialX + (int) (event.getRawX() - initialTouchX);
-                        paramsF.y = initialY + (int) (event.getRawY() - initialTouchY);
-                        showSoftKeyBar();
                         break;
                 }
-//                    }
+//                }
                 return false;
             }
         });
-        Log.e("tset", "onCreate");
     }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (touchView != null) {
+            windowManager.removeView(touchView);
+        }
         if (softKeyBar != null) {
             windowManager.removeView(softKeyBar);
         }
@@ -142,6 +101,29 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     public void onInterrupt() {
 
     }
+
+    public void updateTouchView(int px) {
+        if (touchView != null) {
+            WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchView.getLayoutParams();
+            params.height = px;
+            windowManager.updateViewLayout(touchView, params);
+        }
+    }
+
+    private WindowManager.LayoutParams createTouchViewParms(int px) {
+
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                px,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+        params.gravity = Gravity.BOTTOM;
+        params.x = 0;
+        params.y = 0;
+        return params;
+    }
+
 
     private void showSoftKeyBar() {
         if (softKeyBar == null) {
@@ -204,7 +186,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             case R.id.IB_button_back:
                 break;
             case R.id.IB_button_home:
-                Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.googlequicksearchbox");
+                Intent intent = getPackageManager().getLaunchIntentForPackage(GOOGLE_APP_PACKAGE_NAME);
                 if (intent != null) {
                     // We found the activity now start the activity
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -214,7 +196,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     // Bring user to the market or let them choose an app?
                     intent = new Intent(Intent.ACTION_VIEW);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    intent.setData(Uri.parse("market://details?id=" + "com.package.name"));
+                    intent.setData(Uri.parse("market://details?id=" + GOOGLE_APP_PACKAGE_NAME));
                     startActivity(intent);
                 }
                 break;
