@@ -12,6 +12,9 @@ import android.util.TypedValue;
 
 public class ScreenHepler {
 
+    private final static int DEFAULT_TOUCHVIEW_HEIGHT_DP = 10;
+
+
     public static int dpToPixel(final Resources r, final int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
@@ -20,6 +23,10 @@ public class ScreenHepler {
         DisplayMetrics metrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
         return metrics.heightPixels;
+    }
+
+    public static int getDefautlTouchviewHeight(Context context) {
+        return dpToPixel(context.getResources(), DEFAULT_TOUCHVIEW_HEIGHT_DP);
     }
 
 

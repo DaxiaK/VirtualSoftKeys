@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
 
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initSeekBar() {
         Seek_touch_area.setOnSeekBarChangeListener(seekBarOnSeekBarChange);
         Seek_touch_area.setMax(ScreenHepler.getScreenHeight(this) / 20);
+        Seek_touch_area.setProgress(SPFManager.getTouchviewHeight(this));
     }
 
     private SeekBar.OnSeekBarChangeListener seekBarOnSeekBarChange = new SeekBar.OnSeekBarChangeListener() {
@@ -70,9 +72,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
+            Log.e("test", "onStopTrackingTouch");
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
             if (mAccessibilityService != null) {
                 mAccessibilityService.updateTouchView(seekBar.getProgress());
+                SPFManager.setTouchviewHeight(MainActivity.this, seekBar.getProgress());
                 mAccessibilityService = null;
             }
         }
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            Log.e("test", "onProgressChanged");
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_touchviewer.getLayoutParams();
             params.height = progress;
             View_touchviewer.setLayoutParams(params);

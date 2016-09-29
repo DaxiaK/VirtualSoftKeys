@@ -15,7 +15,9 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageButton;
 
+import tw.com.daxia.virtualsoftkeys.MainActivity;
 import tw.com.daxia.virtualsoftkeys.R;
+import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 
 
@@ -45,6 +47,10 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     protected void onServiceConnected() {
         super.onServiceConnected();
         sSharedInstance = this;
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
@@ -52,8 +58,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         super.onCreate();
         windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
         touchView = new View(this);
-        touchView.setBackgroundColor(Color.parseColor("#74525c"));
-        windowManager.addView(touchView, createTouchViewParms(ScreenHepler.dpToPixel(getResources(), 10)));
+        //transparent color
+        touchView.setBackgroundColor(Color.parseColor("#00000000"));
+        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this)));
         touchView.setOnTouchListener(new View.OnTouchListener() {
             private float initialTouchX;
 
