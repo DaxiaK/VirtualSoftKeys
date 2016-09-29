@@ -13,6 +13,7 @@ public class SPFManager {
 
     private static final String SPF_CONFIG_NEME = "CONFIG";
     private static final String CONFIG_TOUCHVIEW_HEIGHT = "OUCHVIEW_HEIGHT";
+    private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
 
     private static final String SPF_CRASHLOG = "CRASHLOG";
     private static final String CRASHLOG_MESSAGE = "CRASHLOG_MESSAGE";
@@ -28,7 +29,6 @@ public class SPFManager {
      * Setting Method
      */
 
-
     public static int getTouchviewHeight(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         return settings.getInt(CONFIG_TOUCHVIEW_HEIGHT, ScreenHepler.getDefautlTouchviewHeight(context));
@@ -38,6 +38,18 @@ public class SPFManager {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
         PE.putInt(CONFIG_TOUCHVIEW_HEIGHT, heightPx);
+        PE.commit();
+    }
+
+    public static boolean getStylusOnlyMode(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getBoolean(CONFIG_STYLUS_ONLY_MODE, false);
+    }
+
+    public static void setStylusOnlyMode(Context context, boolean stylusOnly) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putBoolean(CONFIG_STYLUS_ONLY_MODE, stylusOnly);
         PE.commit();
     }
 

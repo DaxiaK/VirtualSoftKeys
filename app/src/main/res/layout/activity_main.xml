@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
+        android:alpha="0.5"
         android:background="#ff0000" />
 
     <LinearLayout
@@ -27,10 +28,13 @@
             android:layout_height="20dp"
             android:text="Go" />
 
-        <Button
-            android:id="@+id/But_stop_service"
+        <CheckedTextView
+            android:id="@+id/CTV_stylus_only_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stop" />
+            android:drawableLeft="?android:attr/listChoiceIndicatorSingle"
+            android:gravity="center"
+            android:text="觸控筆模式" />
+
     </LinearLayout>
 </RelativeLayout>

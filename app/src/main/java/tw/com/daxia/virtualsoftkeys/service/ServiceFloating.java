@@ -28,6 +28,15 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private static ServiceFloating sSharedInstance;
 
 
+    /**
+     * Config
+     */
+    private int miniTouchHeight;
+    private boolean stylusOnlyMode;
+
+    /**
+     * View
+     */
     private WindowManager windowManager;
     private View softKeyBar;
     private View touchView;
@@ -46,6 +55,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        Log.e("test","onServiceConnected");
         sSharedInstance = this;
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -56,6 +66,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     @Override
     public void onCreate() {
         super.onCreate();
+        miniTouchHeight = SPFManager.getTouchviewHeight(this) / 4;
         windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
         touchView = new View(this);
         //transparent color
@@ -63,26 +74,16 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this)));
         touchView.setOnTouchListener(new View.OnTouchListener() {
             private float initialTouchX;
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//
-//                if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        initialTouchX = event.getRawX();
-                        Log.e("test", "initialTouchX =" + initialTouchX);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.e("test", "event.getRawX() =" + event.getRawX());
-                        if (event.getRawX() - initialTouchX > 10) {
-                            showSoftKeyBar();
-                        }
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        break;
+                if (stylusOnlyMode) {
+                    if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+                        touchViewTouchEvent(initialTouchX, event);
+                    }
+                } else {
+                    touchViewTouchEvent(initialTouchX, event);
                 }
-//                }
+
                 return false;
             }
         });
@@ -110,11 +111,17 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     }
 
     public void updateTouchView(int px) {
+        //set config
+        this.miniTouchHeight = px / 4;
         if (touchView != null) {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchView.getLayoutParams();
             params.height = px;
             windowManager.updateViewLayout(touchView, params);
         }
+    }
+
+    public void updateStylusOnlyMode(boolean stylusOnly) {
+        this.stylusOnlyMode = stylusOnly;
     }
 
     private WindowManager.LayoutParams createTouchViewParms(int px) {
@@ -129,6 +136,23 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         params.x = 0;
         params.y = 0;
         return params;
+    }
+
+    private void touchViewTouchEvent(float initialTouchX, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                initialTouchX = event.getRawX();
+                Log.e("test", "initialTouchX =" + initialTouchX);
+                break;
+            case MotionEvent.ACTION_UP:
+                Log.e("test", "event.getRawX() =" + event.getRawX());
+                if (event.getRawX() - initialTouchX > miniTouchHeight) {
+                    showSoftKeyBar();
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+        }
     }
 
 

@@ -9,7 +9,7 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -24,19 +24,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static int SYSTEM_ALERT_WINDOW_REQUEST_CODE = 0;
     private final static String TAG = "MainActivity";
     private SeekBar Seek_touch_area;
-    private Button But_stop_service;
+    private CheckedTextView CTV_stylus_only_mode;
     private View View_touchviewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         View_touchviewer = findViewById(R.id.View_touchviewer);
         Seek_touch_area = (SeekBar) findViewById(R.id.Seek_touch_area);
+        CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
+        //Init all view setting
         initSeekBar();
-        But_stop_service = (Button) findViewById(R.id.But_stop_service);
-        But_stop_service.setOnClickListener(this);
+        initStylusMode();
     }
 
     @Override
@@ -62,25 +62,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initSeekBar() {
-        Seek_touch_area.setOnSeekBarChangeListener(seekBarOnSeekBarChange);
+        Seek_touch_area.setOnSeekBarChangeListener(touchviewHeightSeekBarListener);
         Seek_touch_area.setMax(ScreenHepler.getScreenHeight(this) / 20);
         Seek_touch_area.setProgress(SPFManager.getTouchviewHeight(this));
     }
 
-    private SeekBar.OnSeekBarChangeListener seekBarOnSeekBarChange = new SeekBar.OnSeekBarChangeListener() {
+    private void initStylusMode() {
+        CTV_stylus_only_mode.setChecked(SPFManager.getStylusOnlyMode(this));
+        CTV_stylus_only_mode.setOnClickListener(this);
+    }
 
+    private SeekBar.OnSeekBarChangeListener touchviewHeightSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             Log.e("test", "onStopTrackingTouch");
+            SPFManager.setTouchviewHeight(MainActivity.this, seekBar.getProgress());
+
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
             if (mAccessibilityService != null) {
                 mAccessibilityService.updateTouchView(seekBar.getProgress());
-                SPFManager.setTouchviewHeight(MainActivity.this, seekBar.getProgress());
                 mAccessibilityService = null;
             }
         }
-
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
@@ -144,9 +148,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.Seek_touch_area:
-                break;
-            case R.id.But_stop_service:
+            case R.id.CTV_stylus_only_mode:
+                CTV_stylus_only_mode.toggle();
+                Log.e("test", "checked = " + CTV_stylus_only_mode.isChecked());
+                SPFManager.setStylusOnlyMode(this, CTV_stylus_only_mode.isChecked());
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateStylusOnlyMode(CTV_stylus_only_mode.isChecked());
+                    mAccessibilityService = null;
+                }
                 break;
         }
     }
