@@ -185,6 +185,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
 
     private void showSoftKeyBar() {
+
         if (softKeyBar == null) {
             LayoutInflater li = LayoutInflater.from(this);
             softKeyBar = li.inflate(R.layout.softkey_bar, null, true);
@@ -211,6 +212,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                     WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                     PixelFormat.TRANSLUCENT);
+            params.windowAnimations = android.R.style.Animation_InputMethod;
             params.gravity = Gravity.BOTTOM;
             params.x = 0;
             params.y = 0;
@@ -218,6 +220,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         } else {
             softKeyBar.setVisibility(View.VISIBLE);
         }
+
     }
 
 
