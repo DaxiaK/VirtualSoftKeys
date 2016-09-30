@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">VirtualSoftKeys</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">使用此開關來打開或關閉VirtualSoftKey的服務，再打開前請先確認你已授權允許繪製的權限！\n如果有安全上的疑慮，請不用擔心！\n此APP沒有任何的網路權限，亦即無法蒐集你的任何資料，同時此APP也是開源的專案，你可以察看所有的程式碼！</string>
 
 </resources>

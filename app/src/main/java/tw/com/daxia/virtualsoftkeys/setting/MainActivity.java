@@ -1,8 +1,5 @@
-package tw.com.daxia.virtualsoftkeys;
+package tw.com.daxia.virtualsoftkeys.setting;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -13,6 +10,7 @@ import android.widget.CheckedTextView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
@@ -21,12 +19,11 @@ import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private final static int SYSTEM_ALERT_WINDOW_REQUEST_CODE = 0;
     private final static String TAG = "MainActivity";
     private SeekBar Seek_touch_area;
     private CheckedTextView CTV_stylus_only_mode;
     private View View_touchviewer;
-
+    private  PermissionDialog permissionDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,23 +39,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        checkSystemAlertWindowPermission();
-        checkAccessibilitySettingsPermission();
+        boolean drawOverlays = checkSystemAlertWindowPermission();
+        boolean accessibility = isAccessibilitySettingsOn();
+        if(!drawOverlays || !accessibility){
+            PermissionDialog permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
+            permissionDialog.show(this.getSupportFragmentManager(), "permissionDialog");
+        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /** check if received result code
-         is equal our requested code for draw permission  */
-        if (requestCode == SYSTEM_ALERT_WINDOW_REQUEST_CODE) {
-            // ** if so check once again if we have permission */
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.canDrawOverlays(this)) {
-                    // continue here - permission was granted
-//                    goYourActivity();
-                }
-            }
-        }
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void initSeekBar() {
@@ -76,9 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            Log.e("test", "onStopTrackingTouch");
             SPFManager.setTouchviewHeight(MainActivity.this, seekBar.getProgress());
-
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
             if (mAccessibilityService != null) {
                 mAccessibilityService.updateTouchView(seekBar.getProgress());
@@ -102,46 +96,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private boolean checkSystemAlertWindowPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
+        }
         if (!Settings.canDrawOverlays(this)) {
-            /** if not construct intent to request permission */
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            /** request permission via start activity for result */
-            startActivityForResult(intent, SYSTEM_ALERT_WINDOW_REQUEST_CODE);
             return false;
         }
         return true;
     }
 
-    public static boolean isAccessibilitySettingsOn(Context context) {
+    public boolean isAccessibilitySettingsOn() {
         int accessibilityEnabled = 0;
         try {
-            accessibilityEnabled = Settings.Secure.getInt(context.getContentResolver(),
+            accessibilityEnabled = Settings.Secure.getInt(this.getContentResolver(),
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {
             Log.i(TAG, e.getMessage());
         }
 
         if (accessibilityEnabled == 1) {
-            String services = Settings.Secure.getString(context.getContentResolver(),
+            String services = Settings.Secure.getString(this.getContentResolver(),
                     Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
             if (services != null) {
-                return services.toLowerCase().contains(context.getPackageName().toLowerCase());
+                return services.toLowerCase().contains(this.getPackageName().toLowerCase());
             }
         }
 
         return false;
-    }
-
-    private boolean checkAccessibilitySettingsPermission() {
-        if (!isAccessibilitySettingsOn(this)) {
-            startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-            return false;
-        } else {
-            return true;
-        }
     }
 
 

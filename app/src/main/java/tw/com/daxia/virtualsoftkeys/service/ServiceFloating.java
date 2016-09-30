@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,11 +16,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
-import tw.com.daxia.virtualsoftkeys.MainActivity;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
+import tw.com.daxia.virtualsoftkeys.setting.MainActivity;
 
 
 public class ServiceFloating extends AccessibilityService implements View.OnClickListener, View.OnLongClickListener {
@@ -31,8 +34,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     /**
      * Config
      */
-    private int miniTouchHeight;
+    private int miniTouchGestureHeight;
     private boolean stylusOnlyMode;
+    private boolean canDrawOverlays;
 
     /**
      * View
@@ -52,41 +56,42 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     }
 
 
-    @Override
-    protected void onServiceConnected() {
-        super.onServiceConnected();
-        Log.e("test","onServiceConnected");
-        sSharedInstance = this;
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private boolean checkSystemAlertWindowPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (!Settings.canDrawOverlays(this)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        miniTouchHeight = SPFManager.getTouchviewHeight(this) / 4;
-        windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
-        touchView = new View(this);
-        //transparent color
-        touchView.setBackgroundColor(Color.parseColor("#00000000"));
-        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this)));
-        touchView.setOnTouchListener(new View.OnTouchListener() {
-            private float initialTouchX;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (stylusOnlyMode) {
-                    if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
-                        touchViewTouchEvent(initialTouchX, event);
-                    }
-                } else {
-                    touchViewTouchEvent(initialTouchX, event);
-                }
+    }
 
-                return false;
-            }
-        });
+    @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        sSharedInstance = this;
+        canDrawOverlays = checkSystemAlertWindowPermission();
+        if (canDrawOverlays) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            miniTouchGestureHeight = SPFManager.getTouchviewHeight(this) / 4;
+            windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
+            initTouchView();
+        } else {
+            Toast.makeText(this, "請先允許漂浮視窗權限，並重新啟動輔助功能，VirtualSoftKeys才能正常運作", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + this.getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -110,9 +115,33 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     }
 
+
+    private void initTouchView() {
+        touchView = new View(this);
+        //transparent color
+        touchView.setBackgroundColor(Color.parseColor("#00000000"));
+        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this)));
+        touchView.setOnTouchListener(new View.OnTouchListener() {
+            private float initialTouchX;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (stylusOnlyMode) {
+                    if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+                        touchViewTouchEvent(initialTouchX, event);
+                    }
+                } else {
+                    touchViewTouchEvent(initialTouchX, event);
+                }
+
+                return false;
+            }
+        });
+    }
+
     public void updateTouchView(int px) {
         //set config
-        this.miniTouchHeight = px / 4;
+        this.miniTouchGestureHeight = px / 4;
         if (touchView != null) {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchView.getLayoutParams();
             params.height = px;
@@ -125,7 +154,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     }
 
     private WindowManager.LayoutParams createTouchViewParms(int px) {
-
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 px,
@@ -146,7 +174,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                 break;
             case MotionEvent.ACTION_UP:
                 Log.e("test", "event.getRawX() =" + event.getRawX());
-                if (event.getRawX() - initialTouchX > miniTouchHeight) {
+                if (event.getRawX() - initialTouchX > miniTouchGestureHeight) {
                     showSoftKeyBar();
                 }
                 break;
