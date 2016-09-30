@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2.無障礙設定"
+            android:text="2.無障礙設定服務"
             android:textSize="18sp" />
 
         <TextView

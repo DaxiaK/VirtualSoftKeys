@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area;
     private CheckedTextView CTV_stylus_only_mode;
     private View View_touchviewer;
-    private  PermissionDialog permissionDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         boolean drawOverlays = checkSystemAlertWindowPermission();
         boolean accessibility = isAccessibilitySettingsOn();
-        if(!drawOverlays || !accessibility){
+        if (!drawOverlays || !accessibility) {
             PermissionDialog permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
             permissionDialog.show(this.getSupportFragmentManager(), "permissionDialog");
         }
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            Log.e("test", "onProgressChanged");
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_touchviewer.getLayoutParams();
             params.height = progress;
             View_touchviewer.setLayoutParams(params);
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             accessibilityEnabled = Settings.Secure.getInt(this.getContentResolver(),
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {
-            Log.i(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
 
         if (accessibilityEnabled == 1) {
@@ -121,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return services.toLowerCase().contains(this.getPackageName().toLowerCase());
             }
         }
-
         return false;
     }
 
@@ -131,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.CTV_stylus_only_mode:
                 CTV_stylus_only_mode.toggle();
-                Log.e("test", "checked = " + CTV_stylus_only_mode.isChecked());
                 SPFManager.setStylusOnlyMode(this, CTV_stylus_only_mode.isChecked());
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {

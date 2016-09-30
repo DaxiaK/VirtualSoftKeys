@@ -121,27 +121,44 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         //transparent color
         touchView.setBackgroundColor(Color.parseColor("#00000000"));
         windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this)));
-        touchView.setOnTouchListener(new View.OnTouchListener() {
-            private float initialTouchX;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (stylusOnlyMode) {
-                    if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
-                        touchViewTouchEvent(initialTouchX, event);
-                    }
-                } else {
-                    touchViewTouchEvent(initialTouchX, event);
-                }
-
-                return false;
-            }
-        });
+        touchView.setOnTouchListener(touchViewOnTouchListener);
     }
+
+    View.OnTouchListener touchViewOnTouchListener = new View.OnTouchListener() {
+        private float initialTouchX;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (stylusOnlyMode) {
+                if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+                    touchViewTouchEvent(event);
+                }
+            } else {
+                touchViewTouchEvent(event);
+            }
+
+            return false;
+        }
+
+        private void touchViewTouchEvent(MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    initialTouchX = event.getRawX();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if ((event.getRawX() - initialTouchX) > miniTouchGestureHeight) {
+                        showSoftKeyBar();
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+            }
+        }
+    };
 
     public void updateTouchView(int px) {
         //set config
-        this.miniTouchGestureHeight = px / 4;
+        this.miniTouchGestureHeight = px / 5;
         if (touchView != null) {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchView.getLayoutParams();
             params.height = px;
@@ -166,29 +183,12 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         return params;
     }
 
-    private void touchViewTouchEvent(float initialTouchX, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                initialTouchX = event.getRawX();
-                Log.e("test", "initialTouchX =" + initialTouchX);
-                break;
-            case MotionEvent.ACTION_UP:
-                Log.e("test", "event.getRawX() =" + event.getRawX());
-                if (event.getRawX() - initialTouchX > miniTouchGestureHeight) {
-                    showSoftKeyBar();
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-        }
-    }
-
 
     private void showSoftKeyBar() {
 
         if (softKeyBar == null) {
             LayoutInflater li = LayoutInflater.from(this);
-            softKeyBar = li.inflate(R.layout.softkey_bar, null, true);
+            softKeyBar = li.inflate(R.layout.navigation_bar, null, true);
             softKeyBar.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
