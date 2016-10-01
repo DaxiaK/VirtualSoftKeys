@@ -124,7 +124,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         touchView.setOnTouchListener(touchViewOnTouchListener);
     }
 
-    View.OnTouchListener touchViewOnTouchListener = new View.OnTouchListener() {
+    private View.OnTouchListener touchViewOnTouchListener = new View.OnTouchListener() {
         private float initialTouchX;
 
         @Override

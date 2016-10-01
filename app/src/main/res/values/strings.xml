@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name">VirtualSoftKeys</string>
-    <string name="action_settings">使用此開關來打開或關閉VirtualSoftKey的服務，再打開前請先確認你已授權允許繪製的權限！\n如果有安全上的疑慮，請不用擔心！\n此APP沒有任何的網路權限，亦即無法蒐集你的任何資料，同時此APP也是開源專案，你可以察看所有的程式碼！</string>
+
+    <!--Permission Dialog-->
+    <string name="Permission_draw_overlays_title">1.繪製權限</string>
+    <string name="Permission_draw_overlays_content">允許這個權限來顯示NavigationBar(SoftKeyBar)。\n詳細位置在:設定-應用程式-設定-在其他應用程式上層繪製內容-VirtualSoftKeys</string>
+    <string name="Permission_accessibility_title">2.無障礙設定服務</string>
+    <string name="Permission_accessibility_content">打開服務來使Back,Home,Recents按鈕運作。\n詳細位置在:設定-無障礙設定-VirtualSoftKeys</string>
+
+    <string name="Permission_goto_page">前往頁面</string>
+    <string name="Permission_allow_system_alert_first">請先允許繪製權限</string>
+    <string name="Permission_allowed">已獲得權限</string>
+
+
+    <!--Accessibility setting-->
+    <string name="action_settings">使用此開關來打開或關閉VirtualSoftKey的服務，再打開前請先確認你已授權允許繪製的權限！\n如果有安全上的疑慮，請不用擔心！\n此APP沒有任何的網路權限，亦即無法蒐集你的任何資料，你可以在設定頁面找到此專案的開源位置！</string>
 
 </resources>

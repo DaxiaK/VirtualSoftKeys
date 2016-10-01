@@ -7,63 +7,64 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:paddingRight="15dp"
+        android:paddingTop="10dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1.繪製權限"
+            android:text="@string/Permission_draw_overlays_title"
             android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="允許這個權限來顯示NavigationBar(SoftKeyBar)。" />
+            android:layout_marginTop="10dp"
+            android:text="@string/Permission_draw_overlays_content" />
 
-        <RelativeLayout
+
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#f0af0a" />
-        </RelativeLayout>
+            android:layout_height="150dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/draw_overlays_photo" />
 
         <Button
             android:id="@+id/But_intent_system_alert"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="前往頁面" />
+            android:layout_marginTop="10dp"
+            android:text="@string/Permission_goto_page" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2.無障礙設定服務"
+            android:layout_marginTop="20dp"
+            android:text="@string/Permission_accessibility_title"
             android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="打開這個服務來使Back,Home,Recents按鈕運作" />
+            android:layout_marginTop="10dp"
+            android:text="@string/Permission_accessibility_content" />
 
-        <RelativeLayout
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#f0af0a" />
-        </RelativeLayout>
+            android:layout_height="150dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/accessibility_photo"
+            />
 
         <Button
             android:id="@+id/But_intent_accessibility"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:enabled="false"
-            android:text="請先允許繪製權限" />
+            android:text="@string/Permission_allow_system_alert_first" />
     </LinearLayout>
 
 </ScrollView>

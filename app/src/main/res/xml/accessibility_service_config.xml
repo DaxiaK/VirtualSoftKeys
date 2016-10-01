@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes="typeAllMask"
-    android:notificationTimeout="100"
-    android:accessibilityFeedbackType="feedbackSpoken"
-    android:canRetrieveWindowContent="true"
-    android:settingsActivity="tw.com.daxia.virtualsoftkeys.MainActivity"
+    android:canRetrieveWindowContent="false"
+    android:settingsActivity="tw.com.daxia.virtualsoftkeys.setting.MainActivity"
     android:description="@string/action_settings" />
 

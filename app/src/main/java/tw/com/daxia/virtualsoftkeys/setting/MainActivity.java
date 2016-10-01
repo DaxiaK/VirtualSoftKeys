@@ -1,5 +1,7 @@
 package tw.com.daxia.virtualsoftkeys.setting;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -7,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
@@ -20,9 +23,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private final static String TAG = "MainActivity";
+    private final static String MY_GIT_HUB_URL = "https://github.com/erttyy8821/VirtualSoftKeys";
     private SeekBar Seek_touch_area;
     private CheckedTextView CTV_stylus_only_mode;
     private View View_touchviewer;
+    private ImageView IV_my_github;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View_touchviewer = findViewById(R.id.View_touchviewer);
         Seek_touch_area = (SeekBar) findViewById(R.id.Seek_touch_area);
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
+        IV_my_github = (ImageView) findViewById(R.id.IV_my_github);
+        IV_my_github.setOnClickListener(this);
         //Init all view setting
         initSeekBar();
         initStylusMode();
@@ -135,6 +142,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mAccessibilityService.updateStylusOnlyMode(CTV_stylus_only_mode.isChecked());
                     mAccessibilityService = null;
                 }
+                break;
+            case R.id.IV_my_github:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MY_GIT_HUB_URL));
+                startActivity(browserIntent);
                 break;
         }
     }

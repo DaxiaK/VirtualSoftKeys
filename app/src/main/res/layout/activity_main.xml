@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <View
         android:id="@+id/View_touchviewer"
         android:layout_width="match_parent"
@@ -82,6 +81,13 @@
             android:gravity="center"
             android:text="觸控筆模式" />
 
+
+        <ImageView
+            android:id="@+id/IV_my_github"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_github_logo"/>
 
     </LinearLayout>
 </RelativeLayout>
