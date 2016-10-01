@@ -1,24 +1,3 @@
-# VirtualSoftKeys
-
-## Overview
-
-A simple , safe  and easy softKeys ( navigation bar).
-
-## Features
-*  As system navigation bar
-*  No any extra permission
-*  Support stylus
-
-##Todo
-1. More setting at  navigation bar and touch view
-2. More color
-3. Support English
-
-## Screenshot
-![](/screenshot/1.jpg) 
-![](/screenshot/2.jpg) 
-## License
-
 Copyright 2016 Daxia
 
 Licensed under the Apache License, Version 2.0 (the "License");
