@@ -6,3 +6,7 @@
 .DS_Store
 /build
 /captures
+
+#Added
+/.idea
+*.apk
