@@ -11,6 +11,7 @@
     <string name="Permission_allow_system_alert_first">To allow draw permission first</string>
     <string name="Permission_allowed">permission was allowed</string>
     <string name="Permission_allow_system_alert_first_and_restart_service">"Please allowing this permission first , and restart VirtualSoftKeys in accessibility"</string>
+    <string name="Toast_allow_system_alert_first">"Please allowing this permission first"</string>
 
 
     <!--Accessibility setting-->
