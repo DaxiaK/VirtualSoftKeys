@@ -20,6 +20,7 @@
         android:id="@+id/IB_button_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/IB_button_home"
         android:background="@drawable/ic_sys_background"
         android:src="@drawable/ic_sysbar_back" />
