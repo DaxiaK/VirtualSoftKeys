@@ -2,26 +2,28 @@
     <string name="app_name">VirtualSoftKeys</string>
 
     <!--Permission Dialog-->
-    <string name="Permission_draw_overlays_title">1.Draw permission</string>
+    <string name="Permission_draw_overlays_title">1. Draw over other Apps</string>
+<!--
     <string name="Permission_draw_overlays_content">To allow this permission for showing navigation bar(SoftKeyBar)。\nPage is:Settings-Apps-Advanced-Draw over other apps-VirtualSoftKeys</string>
-    <string name="Permission_accessibility_title">2.Accessibility service</string>
-    <string name="Permission_accessibility_content">To open this service for back,home and recents button。\nPage is:Settings-Accessibility-VirtualSoftKeys</string>
+-->
+    <string name="Permission_draw_overlays_content">In order for app to work properly and show the navigation bar (Soft Key Bar) you need to allow the permissions to draw over other apps. \nSettings > Apps > Advanced > Draw over other apps</string>
+    <string name="Permission_accessibility_title">2. Accessibility service</string>
+    <string name="Permission_accessibility_content">And then enable the Accessibility service. \nSettings > Accessibility > VirtualSoftKeys</string>
 
-    <string name="Permission_goto_page">Go to page</string>
-    <string name="Permission_allow_system_alert_first">To allow draw permission first</string>
-    <string name="Permission_allowed">permission was allowed</string>
-    <string name="Permission_allow_system_alert_first_and_restart_service">"Please allowing this permission first , and restart VirtualSoftKeys in accessibility"</string>
+    <string name="Permission_goto_page">Go to Settings</string>
+    <string name="Permission_allow_system_alert_first">Please allow draw over apps permission</string>
+    <string name="Permission_allowed">Permission Granted</string>
+    <string name="Permission_allow_system_alert_first_and_restart_service">"Please allow this permission first , and select VirtualSoftKeys in accessibility"</string>
 
 
     <!--Accessibility setting-->
-    <string name="action_settings">Turn on or off the VirtualSoftKey\'s service , please checked the draw permission first.\nDon\'t worry about any security!\nThis app doesn\'t have any internet permission , so it can\'t get any data form you.\nYou can find the open source url in setting page.</string>
+    <string name="action_settings">Turn VirtualSoftKey\'s service on or off, Remember if the service is off you cannot use Soft Key Bar in your app.\n Remember, We care about users privacy and do not collect any data from users, this is an open source project and you can find the URL for the project on the main page.</string>
 
     <!--main activity-->
     <string name="setting_gesture_height_title">Gesture height:</string>
     <string name="setting_gesture_height_content">The height of touch area is for triggering gesture event</string>
     <string name="setting_stylus_mode_title">Stylus mode:</string>
-    <string name="setting_stylus_mode_content">Only triggering gesture event is by system supports stylus</string>
+    <string name="setting_stylus_mode_content">Select Stylus mode if your phone supports stylus</string>
     <string name="setting_stylus_mode_button">Stylus mode</string>
-
 
 </resources>
