@@ -36,7 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/Permission_goto_page" />
+            android:text="@string/Permission_goto_page"
+            android:textAllCaps="false" />
 
         <TextView
             android:layout_width="match_parent"
@@ -55,8 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/accessibility_photo"
-            />
+            android:src="@drawable/accessibility_photo" />
 
         <Button
             android:id="@+id/But_intent_accessibility"
@@ -64,7 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:enabled="false"
-            android:text="@string/Permission_allow_system_alert_first" />
+            android:text="@string/Permission_allow_system_alert_first"
+            android:textAllCaps="false" />
     </LinearLayout>
 
 </ScrollView>

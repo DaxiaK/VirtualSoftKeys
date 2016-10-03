@@ -68,13 +68,13 @@ public class PermissionDialog extends DialogFragment implements View.OnClickList
         if (!systemAlertPermission && !accessibilityPermission) {
             //Use layout default value
         } else if (systemAlertPermission && !accessibilityPermission) {
-            But_intent_system_alert.setText("已獲得授權");
+            But_intent_system_alert.setText(getString(R.string.Permission_allowed));
             But_intent_system_alert.setEnabled(false);
-            But_intent_accessibility.setText("前往頁面");
+            But_intent_accessibility.setText(getString(R.string.Permission_goto_page));
             But_intent_accessibility.setEnabled(true);
         } else if (!systemAlertPermission && accessibilityPermission) {
             //User change the Permission without this dialog
-            But_intent_system_alert.setText("請允許此授權，並且重新執行在無障礙設定中的VirtualSoftKeys");
+            But_intent_system_alert.setText(getString(R.string.Permission_allow_system_alert_first_and_restart_service));
             But_intent_system_alert.setEnabled(true);
         }
     }

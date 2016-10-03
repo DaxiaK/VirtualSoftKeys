@@ -2,17 +2,26 @@
     <string name="app_name">VirtualSoftKeys</string>
 
     <!--Permission Dialog-->
-    <string name="Permission_draw_overlays_title">1.繪製權限</string>
-    <string name="Permission_draw_overlays_content">允許這個權限來顯示NavigationBar(SoftKeyBar)。\n詳細位置在:設定-應用程式-設定-在其他應用程式上層繪製內容-VirtualSoftKeys</string>
-    <string name="Permission_accessibility_title">2.無障礙設定服務</string>
-    <string name="Permission_accessibility_content">打開服務來使Back,Home,Recents按鈕運作。\n詳細位置在:設定-無障礙設定-VirtualSoftKeys</string>
+    <string name="Permission_draw_overlays_title">1.Draw permission</string>
+    <string name="Permission_draw_overlays_content">To allow this permission for showing navigation bar(SoftKeyBar)。\nPage is:Settings-Apps-Advanced-Draw over other apps-VirtualSoftKeys</string>
+    <string name="Permission_accessibility_title">2.Accessibility service</string>
+    <string name="Permission_accessibility_content">To open this service for back,home and recents button。\nPage is:Settings-Accessibility-VirtualSoftKeys</string>
 
-    <string name="Permission_goto_page">前往頁面</string>
-    <string name="Permission_allow_system_alert_first">請先允許繪製權限</string>
-    <string name="Permission_allowed">已獲得權限</string>
+    <string name="Permission_goto_page">Go to page</string>
+    <string name="Permission_allow_system_alert_first">To allow draw permission first</string>
+    <string name="Permission_allowed">permission was allowed</string>
+    <string name="Permission_allow_system_alert_first_and_restart_service">"Please allowing this permission first , and restart VirtualSoftKeys in accessibility"</string>
 
 
     <!--Accessibility setting-->
-    <string name="action_settings">使用此開關來打開或關閉VirtualSoftKey的服務，再打開前請先確認你已授權允許繪製的權限！\n如果有安全上的疑慮，請不用擔心！\n此APP沒有任何的網路權限，亦即無法蒐集你的任何資料，你可以在設定頁面找到此專案的開源位置！</string>
+    <string name="action_settings">Turn on or off the VirtualSoftKey\'s service , please checked the draw permission first.\nDon\'t worry about any security!\nThis app doesn\'t have any internet permission , so it can\'t get any data form you.\nYou can find the open source url in setting page.</string>
+
+    <!--main activity-->
+    <string name="setting_gesture_height_title">Gesture height:</string>
+    <string name="setting_gesture_height_content">The height of touch area is for triggering gesture event</string>
+    <string name="setting_stylus_mode_title">Stylus mode:</string>
+    <string name="setting_stylus_mode_content">Only triggering gesture event is by system supports stylus</string>
+    <string name="setting_stylus_mode_button">Stylus mode</string>
+
 
 </resources>
