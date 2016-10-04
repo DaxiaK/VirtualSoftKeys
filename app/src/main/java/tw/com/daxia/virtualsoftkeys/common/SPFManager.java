@@ -13,6 +13,7 @@ public class SPFManager {
 
     private static final String SPF_CONFIG_NEME = "CONFIG";
     private static final String CONFIG_TOUCHVIEW_HEIGHT = "OUCHVIEW_HEIGHT";
+    private static final String CONFIG_TOUCHVIEW_WIDTH = "TOUCHVIEW_WIDTH";
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
 
     private static final String SPF_CRASHLOG = "CRASHLOG";
@@ -41,6 +42,18 @@ public class SPFManager {
         PE.commit();
     }
 
+    public static int getTouchviewWidth(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getInt(CONFIG_TOUCHVIEW_WIDTH, ScreenHepler.getDefautlTouchviewWidth());
+    }
+
+    public static void setTouchviewWidth(Context context, int widthPx) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_TOUCHVIEW_WIDTH, widthPx);
+        PE.commit();
+    }
+
     public static boolean getStylusOnlyMode(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         return settings.getBoolean(CONFIG_STYLUS_ONLY_MODE, false);
@@ -56,7 +69,7 @@ public class SPFManager {
     /**
      * CrashLog
      */
-
+    //TODO Add the  Crash trace
     public static void setCrashLog(Context context, String message) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CRASHLOG, 0);
         SharedPreferences.Editor PE = settings.edit();
@@ -80,6 +93,7 @@ public class SPFManager {
     /**
      * For System
      */
+    //TODO Add the version trace
     public static void setVersionCode(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_SYSTEM, 0);
         SharedPreferences.Editor PE = settings.edit();

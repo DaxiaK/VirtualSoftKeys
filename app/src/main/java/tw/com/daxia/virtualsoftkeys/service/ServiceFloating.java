@@ -8,6 +8,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +35,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
      * Config
      */
     private int miniTouchGestureHeight;
+    private final static int miniTouchGestureHeightSensitivity = 4;
+
     private boolean stylusOnlyMode;
     private boolean canDrawOverlays;
 
@@ -80,7 +83,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            miniTouchGestureHeight = SPFManager.getTouchviewHeight(this) / 4;
+            miniTouchGestureHeight = SPFManager.getTouchviewHeight(this) / miniTouchGestureHeightSensitivity;
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
             initTouchView();
         } else {
@@ -118,8 +121,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private void initTouchView() {
         touchView = new View(this);
         //transparent color
-        touchView.setBackgroundColor(Color.parseColor("#00000000"));
-        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this)));
+        touchView.setBackgroundColor(Color.parseColor("#aaaaaa"));
+        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this),SPFManager.getTouchviewWidth(this)));
         touchView.setOnTouchListener(touchViewOnTouchListener);
     }
 
@@ -155,12 +158,20 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         }
     };
 
-    public void updateTouchView(int px) {
+    public void updateTouchView(@Nullable Integer hieghtPx, @Nullable Integer widthPx, @Nullable Integer position) {
         //set config
-        this.miniTouchGestureHeight = px / 5;
         if (touchView != null) {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchView.getLayoutParams();
-            params.height = px;
+            if (hieghtPx != null) {
+                this.miniTouchGestureHeight = hieghtPx / miniTouchGestureHeightSensitivity;
+                params.height = hieghtPx;
+            }
+            if (widthPx != null) {
+                params.width = widthPx;
+            }
+            if (position != null) {
+                params.x = position;
+            }
             windowManager.updateViewLayout(touchView, params);
         }
     }
@@ -169,14 +180,14 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         this.stylusOnlyMode = stylusOnly;
     }
 
-    private WindowManager.LayoutParams createTouchViewParms(int px) {
+    private WindowManager.LayoutParams createTouchViewParms(int heightPx,int weightPx) {
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                px,
+                weightPx,
+                heightPx,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.BOTTOM;
+        params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         params.x = 0;
         params.y = 0;
         return params;
@@ -184,7 +195,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
 
     private void showSoftKeyBar() {
-
         if (softKeyBar == null) {
             LayoutInflater li = LayoutInflater.from(this);
             softKeyBar = li.inflate(R.layout.navigation_bar, null, true);
@@ -212,7 +222,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                     PixelFormat.TRANSLUCENT);
             params.windowAnimations = android.R.style.Animation_InputMethod;
-            params.gravity = Gravity.BOTTOM;
+            params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
             params.x = 0;
             params.y = 0;
             windowManager.addView(softKeyBar, params);

@@ -9,89 +9,157 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:alpha="0.5"
         android:background="#ff0000" />
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="50dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="50dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-            <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/setting_gesture_height_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/setting_gesture_height_content"
+                    android:textColor="#828282"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/Seek_touch_area_height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="寬度"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="寬度2"
+                    android:textColor="#828282"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/Seek_touch_area_width"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="位置"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="位置2"
+                    android:textColor="#828282"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <tw.com.daxia.virtualsoftkeys.setting.ui.NegativeSeekBar
+                android:id="@+id/Seek_touch_area_position"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/setting_stylus_mode_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/setting_stylus_mode_content"
+                    android:textColor="#828282"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+
+            <CheckedTextView
+                android:id="@+id/CTV_stylus_only_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="5dp"
-                android:text="@string/setting_gesture_height_title"
-                android:textColor="@android:color/black"
-                android:textSize="22sp" />
+                android:layout_marginTop="10dp"
+                android:drawableLeft="?android:attr/listChoiceIndicatorSingle"
+                android:gravity="center"
+                android:text="@string/setting_stylus_mode_button" />
 
-            <TextView
+
+            <ImageView
+                android:id="@+id/IV_my_github"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/setting_gesture_height_content"
-                android:textColor="#828282"
-                android:textSize="16sp" />
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_github_logo" />
+
         </LinearLayout>
-
-        <SeekBar
-            android:id="@+id/Seek_touch_area"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="5dp"
-                android:text="@string/setting_stylus_mode_title"
-                android:textColor="@android:color/black"
-                android:textSize="22sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/setting_stylus_mode_content"
-                android:textColor="#828282"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-
-        <CheckedTextView
-            android:id="@+id/CTV_stylus_only_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="?android:attr/listChoiceIndicatorSingle"
-            android:gravity="center"
-            android:text="@string/setting_stylus_mode_button" />
-
-
-        <ImageView
-            android:id="@+id/IV_my_github"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/ic_github_logo" />
-
-    </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
