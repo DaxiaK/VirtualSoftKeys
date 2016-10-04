@@ -8,7 +8,6 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -85,7 +84,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
             initTouchView();
         } else {
-            Toast.makeText(this, "請先允許漂浮視窗權限，並重新啟動輔助功能，VirtualSoftKeys才能正常運作", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.Toast_allow_system_alert_first), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + this.getPackageName()));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -107,12 +106,12 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.e("test", "event = " + event.getEventType());
+        //Do nothing
     }
 
     @Override
     public void onInterrupt() {
-
+        //Do nothing
     }
 
 
@@ -130,7 +129,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (stylusOnlyMode) {
-                if (event.getPointerCount() > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+                if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
                     touchViewTouchEvent(event);
                 }
             } else {

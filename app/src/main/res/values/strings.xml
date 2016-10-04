@@ -9,11 +9,12 @@
     <string name="Permission_draw_overlays_content">In order for app to work properly and show the navigation bar (Soft Key Bar) you need to allow the permissions to draw over other apps. \nSettings > Apps > Advanced > Draw over other apps</string>
     <string name="Permission_accessibility_title">2. Accessibility service</string>
     <string name="Permission_accessibility_content">And then enable the Accessibility service. \nSettings > Accessibility > VirtualSoftKeys</string>
-
+    
     <string name="Permission_goto_page">Go to Settings</string>
     <string name="Permission_allow_system_alert_first">Please allow draw over apps permission</string>
     <string name="Permission_allowed">Permission Granted</string>
     <string name="Permission_allow_system_alert_first_and_restart_service">"Please allow this permission first , and select VirtualSoftKeys in accessibility"</string>
+    <string name="Toast_allow_system_alert_first">"Please allow this permission first"</string>
 
 
     <!--Accessibility setting-->

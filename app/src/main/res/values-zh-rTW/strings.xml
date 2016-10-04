@@ -10,8 +10,8 @@
     <string name="Permission_goto_page">前往頁面</string>
     <string name="Permission_allow_system_alert_first">請先允許繪製權限</string>
     <string name="Permission_allowed">已獲得權限</string>
-    <string name="Permission_allow_system_alert_first_and_restart_service">"請允許此授權，並且重新執行在無障礙設定中的VirtualSoftKeys"</string>
-
+    <string name="Permission_allow_system_alert_first_and_restart_service">請允許此授權，並且重新執行在無障礙設定中的VirtualSoftKeys</string>
+    <string name="Toast_allow_system_alert_first">請先允許漂浮視窗權限"</string>
 
     <!--Accessibility setting-->
     <string name="action_settings">使用此開關來打開或關閉VirtualSoftKey的服務，再打開前請先確認你已授權允許繪製的權限！\n如果有安全上的疑慮，請不用擔心！\n此APP沒有任何的網路權限，亦即無法蒐集你的任何資料，你可以在設定頁面找到此專案的開源位置！</string>
