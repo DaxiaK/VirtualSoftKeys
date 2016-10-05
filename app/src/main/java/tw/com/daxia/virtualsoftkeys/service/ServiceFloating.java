@@ -19,6 +19,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import tw.com.daxia.virtualsoftkeys.BuildConfig;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
@@ -122,8 +123,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private void initTouchView() {
         touchView = new View(this);
         //transparent color
-        touchView.setBackgroundColor(Color.parseColor("#aaaaaa"));
-        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this), SPFManager.getTouchviewWidth(this)));
+        touchView.setBackgroundColor(Color.parseColor("#00000000"));
+        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this),
+                SPFManager.getTouchviewWidth(this), SPFManager.getTouchviewPosition(this)));
         touchView.setOnTouchListener(touchViewOnTouchListener);
     }
 
@@ -146,12 +148,16 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         private void touchViewTouchEvent(MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Log.e("test", "initialTouchX =" + initialTouchX);
+                    if (BuildConfig.DEBUG) {
+                        Log.d("test", "initialTouchX =" + initialTouchX);
+                    }
                     initialTouchX = event.getRawX();
                     break;
                 case MotionEvent.ACTION_UP:
-                    Log.e("test", "ACTION_UP,initialTouchX =" + initialTouchX);
-                    Log.e("test", "ACTION_UP,getRawX =" + event.getRawX());
+                    if (BuildConfig.DEBUG) {
+                        Log.d("test", "ACTION_UP,initialTouchX =" + initialTouchX);
+                        Log.d("test", "ACTION_UP,getRawX =" + event.getRawX());
+                    }
                     if ((event.getRawX() - initialTouchX) > miniTouchGestureHeight) {
                         showSoftKeyBar();
                     }
@@ -184,15 +190,15 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         this.stylusOnlyMode = stylusOnly;
     }
 
-    private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx) {
+    private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 weightPx,
                 heightPx,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.BOTTOM ;
-        params.x = 0;
+        params.gravity = Gravity.BOTTOM | Gravity.LEFT;
+        params.x = position;
         params.y = 0;
         return params;
     }
