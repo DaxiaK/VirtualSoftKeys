@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -122,7 +123,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         touchView = new View(this);
         //transparent color
         touchView.setBackgroundColor(Color.parseColor("#aaaaaa"));
-        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this),SPFManager.getTouchviewWidth(this)));
+        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this), SPFManager.getTouchviewWidth(this)));
         touchView.setOnTouchListener(touchViewOnTouchListener);
     }
 
@@ -145,9 +146,12 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         private void touchViewTouchEvent(MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    Log.e("test", "initialTouchX =" + initialTouchX);
                     initialTouchX = event.getRawX();
                     break;
                 case MotionEvent.ACTION_UP:
+                    Log.e("test", "ACTION_UP,initialTouchX =" + initialTouchX);
+                    Log.e("test", "ACTION_UP,getRawX =" + event.getRawX());
                     if ((event.getRawX() - initialTouchX) > miniTouchGestureHeight) {
                         showSoftKeyBar();
                     }
@@ -180,14 +184,14 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         this.stylusOnlyMode = stylusOnly;
     }
 
-    private WindowManager.LayoutParams createTouchViewParms(int heightPx,int weightPx) {
+    private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx) {
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 weightPx,
                 heightPx,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        params.gravity = Gravity.BOTTOM ;
         params.x = 0;
         params.y = 0;
         return params;

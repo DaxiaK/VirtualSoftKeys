@@ -5,11 +5,12 @@
     android:layout_height="match_parent">
 
     <View
+        android:padding="0dp"
+        android:layout_margin="0dp"
         android:id="@+id/View_touchviewer"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:alpha="0.5"
         android:background="#ff0000" />
 
@@ -80,6 +81,32 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/TV_touchview_current_width"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="寬度"
+                    android:textColor="#828282"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/TV_touchview_total_width"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="/"
+                    android:textColor="#828282"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
             <SeekBar
                 android:id="@+id/Seek_touch_area_width"
                 android:layout_width="match_parent"
@@ -110,7 +137,7 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <tw.com.daxia.virtualsoftkeys.setting.ui.NegativeSeekBar
+            <SeekBar
                 android:id="@+id/Seek_touch_area_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

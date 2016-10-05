@@ -14,6 +14,8 @@ public class SPFManager {
     private static final String SPF_CONFIG_NEME = "CONFIG";
     private static final String CONFIG_TOUCHVIEW_HEIGHT = "OUCHVIEW_HEIGHT";
     private static final String CONFIG_TOUCHVIEW_WIDTH = "TOUCHVIEW_WIDTH";
+    private static final String CONFIG_TOUCHVIEW_POSITION = "TOUCHVIEW_POSITION";
+
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
 
     private static final String SPF_CRASHLOG = "CRASHLOG";
@@ -53,6 +55,20 @@ public class SPFManager {
         PE.putInt(CONFIG_TOUCHVIEW_WIDTH, widthPx);
         PE.commit();
     }
+
+    public static int getTouchviewPosition(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        //Default width is match_content , so  position = 0
+        return settings.getInt(CONFIG_TOUCHVIEW_POSITION, 0);
+    }
+
+    public static void setTouchviewPosition(Context context, int position) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_TOUCHVIEW_POSITION, position);
+        PE.commit();
+    }
+
 
     public static boolean getStylusOnlyMode(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);

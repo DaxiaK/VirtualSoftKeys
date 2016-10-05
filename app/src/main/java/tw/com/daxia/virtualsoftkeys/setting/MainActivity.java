@@ -12,13 +12,13 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import tw.com.daxia.virtualsoftkeys.BuildConfig;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
-import tw.com.daxia.virtualsoftkeys.setting.ui.NegativeSeekBar;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -27,10 +27,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static String TAG = "MainActivity";
     private final static String MY_GIT_HUB_URL = "https://github.com/erttyy8821/VirtualSoftKeys";
     private SeekBar Seek_touch_area_height, Seek_touch_area_width;
-    private NegativeSeekBar Seek_touch_area_position;
+    private SeekBar Seek_touch_area_position;
+    private TextView TV_touchview_current_width, TV_touchview_total_width;
     private CheckedTextView CTV_stylus_only_mode;
     private View View_touchviewer;
     private ImageView IV_my_github;
+    private int screenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +41,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View_touchviewer = findViewById(R.id.View_touchviewer);
         Seek_touch_area_height = (SeekBar) findViewById(R.id.Seek_touch_area_height);
         Seek_touch_area_width = (SeekBar) findViewById(R.id.Seek_touch_area_width);
-        Seek_touch_area_position = (NegativeSeekBar) findViewById(R.id.Seek_touch_area_position);
+        TV_touchview_current_width = (TextView) findViewById(R.id.TV_touchview_current_width);
+        TV_touchview_total_width = (TextView) findViewById(R.id.TV_touchview_total_width);
+        Seek_touch_area_position = (SeekBar) findViewById(R.id.Seek_touch_area_position);
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
         IV_my_github = (ImageView) findViewById(R.id.IV_my_github);
         IV_my_github.setOnClickListener(this);
         //Init all view setting
-        initSeekBar();
         initStylusMode();
+        initSeekBar();
     }
 
     @Override
@@ -69,9 +73,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
     }
 
+    private void initStylusMode() {
+        CTV_stylus_only_mode.setChecked(SPFManager.getStylusOnlyMode(this));
+        CTV_stylus_only_mode.setOnClickListener(this);
+    }
+
     private void initSeekBar() {
         int screenHeight = ScreenHepler.getScreenHeight(this);
-        int screenWidth = ScreenHepler.getScreenWidth(this);
+        screenWidth = ScreenHepler.getScreenWidth(this);
         int touchviewWidgth = SPFManager.getTouchviewWidth(this);
 
         //Height
@@ -84,19 +93,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //For first time
         if (touchviewWidgth == ScreenHepler.getDefautlTouchviewWidth()) {
             Seek_touch_area_width.setProgress(screenWidth);
+            //set position
+            updateTouchViewPosition(screenWidth, SPFManager.getTouchviewPosition(this));
         } else {
             Seek_touch_area_width.setProgress(touchviewWidgth);
+            //set position
+            updateTouchViewPosition(View_touchviewer.getWidth(), SPFManager.getTouchviewPosition(this));
         }
-        //position
-        Seek_touch_area_position.setMinValue(-(screenWidth / 2));
-        Seek_touch_area_position.setMaxValue(screenWidth / 2);
-        Seek_touch_area_position.setProgress(0);
+        //position ui & listener
+        TV_touchview_total_width.setText("/" + String.valueOf(screenWidth));
         Seek_touch_area_position.setOnSeekBarChangeListener(touchviewPositionSeekBarListener);
+
     }
 
-    private void initStylusMode() {
-        CTV_stylus_only_mode.setChecked(SPFManager.getStylusOnlyMode(this));
-        CTV_stylus_only_mode.setOnClickListener(this);
+    private void updateTouchViewPosition(int toughviewWidth, int positionFromSPF) {
+        Seek_touch_area_position.setMax(screenWidth - toughviewWidth);
+        if (positionFromSPF >= 0) {
+            Seek_touch_area_position.setProgress(positionFromSPF);
+        } else {
+            //Default is in center horizontal
+            Seek_touch_area_position.setProgress((screenWidth / 2) - (toughviewWidth / 2));
+        }
     }
 
     private SeekBar.OnSeekBarChangeListener touchviewHeightSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
@@ -126,10 +143,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar.OnSeekBarChangeListener touchviewWidthSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
+            updateTouchViewPosition(seekBar.getProgress(), -1);
+            SPFManager.setTouchviewPosition(MainActivity.this, Seek_touch_area_position.getProgress());
             SPFManager.setTouchviewWidth(MainActivity.this, seekBar.getProgress());
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
             if (mAccessibilityService != null) {
-                mAccessibilityService.updateTouchView(null, seekBar.getProgress(), null);
+                mAccessibilityService.updateTouchView(null, seekBar.getProgress(), Seek_touch_area_position.getProgress());
+                mAccessibilityService = null;
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            TV_touchview_current_width.setText(String.valueOf(progress));
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_touchviewer.getLayoutParams();
+            params.width = progress;
+            View_touchviewer.setLayoutParams(params);
+        }
+    };
+
+    private SeekBar.OnSeekBarChangeListener touchviewPositionSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            SPFManager.setTouchviewPosition(MainActivity.this, seekBar.getProgress());
+            ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+            if (mAccessibilityService != null) {
+                mAccessibilityService.updateTouchView(null, null, seekBar.getProgress());
                 mAccessibilityService = null;
             }
         }
@@ -142,32 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_touchviewer.getLayoutParams();
-            params.width = progress;
-            View_touchviewer.setLayoutParams(params);
-        }
-    };
-
-    private SeekBar.OnSeekBarChangeListener touchviewPositionSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            SPFManager.setTouchviewWidth(MainActivity.this, seekBar.getProgress());
-            ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
-//            if (mAccessibilityService != null) {
-//                mAccessibilityService.updateTouchView(null, seekBar.getProgress(), null);
-//                mAccessibilityService = null;
-//            }
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            Log.e("test", "progress= " + progress);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_touchviewer.getLayoutParams();
-            params.setMargins(progress, 0, 0, 0);
+            params.setMarginStart(progress);
             View_touchviewer.setLayoutParams(params);
         }
     };
