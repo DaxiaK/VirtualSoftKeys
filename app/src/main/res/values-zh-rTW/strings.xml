@@ -18,10 +18,20 @@
 
     <!--main activity-->
     <string name="setting_gesture_height_title">手勢區域高度:</string>
-    <string name="setting_gesture_height_content">用來觸發手勢的區域實際高度</string>
+    <string name="setting_gesture_height_content">用來觸發手勢的區域高度</string>
+    <string name="setting_gesture_width_title">手勢區域寬度:</string>
+    <string name="setting_gesture_width_content">用來觸發手勢的區域寬度</string>
+    <string name="setting_gesture_position_title">手勢區域位置:</string>
+    <string name="setting_gesture_position_content">用來觸發手勢的區域位置</string>
+
     <string name="setting_stylus_mode_title">觸控筆模式:</string>
-    <string name="setting_stylus_mode_content">是否只允系統支援的觸控筆觸發手勢</string>
+    <string name="setting_stylus_mode_content">只允系統支援的觸控筆觸發手勢</string>
     <string name="setting_stylus_mode_button">觸控筆模式</string>
+
+    <string name="config_name_title">觸碰設定檔:</string>
+    <string name="config_name_portrait">直立螢幕</string>
+    <string name="config_name_landscape">橫式螢幕</string>
+    <string name="config_shared_title">共用設定</string>
 
 
 </resources>

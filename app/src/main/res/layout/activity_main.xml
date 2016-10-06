@@ -5,14 +5,14 @@
     android:layout_height="match_parent">
 
     <View
-        android:padding="0dp"
-        android:layout_margin="0dp"
         android:id="@+id/View_touchviewer"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
+        android:layout_margin="0dp"
         android:alpha="0.5"
-        android:background="#ff0000" />
+        android:background="#ff0000"
+        android:padding="0dp" />
 
 
     <ScrollView
@@ -27,6 +27,30 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/config_name_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/TV_config_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
-                    android:text="寬度"
+                    android:text="@string/setting_gesture_width_title"
                     android:textColor="@android:color/black"
                     android:textSize="22sp" />
 
@@ -76,33 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="寬度2"
-                    android:textColor="#828282"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/TV_touchview_current_width"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
-                    android:text="寬度"
-                    android:textColor="#828282"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/TV_touchview_total_width"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="/"
+                    android:text="@string/setting_gesture_width_content"
                     android:textColor="#828282"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -124,7 +122,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
-                    android:text="位置"
+                    android:text="@string/setting_gesture_position_title"
                     android:textColor="@android:color/black"
                     android:textSize="22sp" />
 
@@ -132,7 +130,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="位置2"
+                    android:text="@string/setting_gesture_position_content"
                     android:textColor="#828282"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -142,6 +140,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/config_shared_title"
+                android:textColor="@android:color/black"
+                android:textSize="22sp" />
 
 
             <LinearLayout
@@ -181,6 +190,7 @@
 
 
             <ImageView
+                android:layout_gravity="center"
                 android:id="@+id/IV_my_github"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

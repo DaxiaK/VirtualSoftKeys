@@ -76,14 +76,13 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (ScreenHepler.isPortrait(getResources())) {
             isPortrait = true;
-            updateTouchView(SPFManager.getTouchviewPortraitHeight(this),SPFManager.getTouchviewPortraitWidth(this),
+            updateTouchView(SPFManager.getTouchviewPortraitHeight(this), SPFManager.getTouchviewPortraitWidth(this),
                     SPFManager.getTouchviewPortraitPosition(this));
-        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        } else {
             isPortrait = false;
-            updateTouchView(SPFManager.getTouchviewLandscapeHeight(this),SPFManager.getTouchviewLandscapeWidth(this),
+            updateTouchView(SPFManager.getTouchviewLandscapeHeight(this), SPFManager.getTouchviewLandscapeWidth(this),
                     SPFManager.getTouchviewLandscapePosition(this));
         }
     }
@@ -104,9 +103,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (ScreenHepler.isPortrait(getResources())) {
                 isPortrait = true;
-            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            } else {
                 isPortrait = false;
             }
             initTouchView();
@@ -145,13 +144,12 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private void initTouchView() {
         touchView = new View(this);
         touchView.setBackgroundColor(Color.parseColor("#00000000"));
-        if(isPortrait){
+        if (isPortrait) {
             miniTouchGestureHeight = SPFManager.getTouchviewPortraitHeight(this) / miniTouchGestureHeightSensitivity;
             //transparent color
             windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewPortraitHeight(this),
                     SPFManager.getTouchviewPortraitWidth(this), SPFManager.getTouchviewPortraitPosition(this)));
-       }
-        else {
+        } else {
             miniTouchGestureHeight = SPFManager.getTouchviewLandscapeHeight(this) / miniTouchGestureHeightSensitivity;
             //transparent color
             windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewLandscapeHeight(this),

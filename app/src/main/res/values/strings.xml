@@ -3,9 +3,6 @@
 
     <!--Permission Dialog-->
     <string name="Permission_draw_overlays_title">1. Draw over other Apps</string>
-<!--
-    <string name="Permission_draw_overlays_content">To allow this permission for showing navigation bar(SoftKeyBar)。\nPage is:Settings-Apps-Advanced-Draw over other apps-VirtualSoftKeys</string>
--->
     <string name="Permission_draw_overlays_content">In order for app to work properly and show the navigation bar (Soft Key Bar) you need to allow the permissions to draw over other apps. \nSettings > Apps > Advanced > Draw over other apps</string>
     <string name="Permission_accessibility_title">2. Accessibility service</string>
     <string name="Permission_accessibility_content">And then enable the Accessibility service. \nSettings > Accessibility > VirtualSoftKeys</string>
@@ -22,9 +19,21 @@
 
     <!--main activity-->
     <string name="setting_gesture_height_title">Gesture height:</string>
-    <string name="setting_gesture_height_content">The height of touch area is for triggering gesture event</string>
+    <string name="setting_gesture_height_content">The height of touch area is</string>
+    <string name="setting_gesture_width_title">Gesture width:</string>
+    <string name="setting_gesture_width_content">The width of touch area is</string>
+    <string name="setting_gesture_position_title">Gesture position:</string>
+    <string name="setting_gesture_position_content">The position of touch area is</string>
+
     <string name="setting_stylus_mode_title">Stylus mode:</string>
     <string name="setting_stylus_mode_content">Select Stylus mode if your device supports stylus</string>
     <string name="setting_stylus_mode_button">Stylus mode</string>
+
+    <string name="config_name_title">Configuration:</string>
+    <string name="config_name_portrait">Portrait</string>
+    <string name="config_name_landscape">Landscape</string>
+    <string name="config_shared_title">Shared Configuration</string>
+
+
 
 </resources>
