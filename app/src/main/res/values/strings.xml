@@ -24,7 +24,7 @@
     <string name="setting_gesture_height_title">Gesture height:</string>
     <string name="setting_gesture_height_content">The height of touch area is for triggering gesture event</string>
     <string name="setting_stylus_mode_title">Stylus mode:</string>
-    <string name="setting_stylus_mode_content">Select Stylus mode if your phone supports stylus</string>
+    <string name="setting_stylus_mode_content">Select Stylus mode if your device supports stylus</string>
     <string name="setting_stylus_mode_button">Stylus mode</string>
 
 </resources>

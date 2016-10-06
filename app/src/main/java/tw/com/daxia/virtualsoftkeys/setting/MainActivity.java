@@ -1,6 +1,7 @@
 package tw.com.daxia.virtualsoftkeys.setting;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,22 +35,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View View_touchviewer;
     private ImageView IV_my_github;
     private int screenWidth;
+    private boolean isPortrait;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("test", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         View_touchviewer = findViewById(R.id.View_touchviewer);
         Seek_touch_area_height = (SeekBar) findViewById(R.id.Seek_touch_area_height);
+        Seek_touch_area_height.setOnSeekBarChangeListener(touchviewHeightSeekBarListener);
+        Seek_touch_area_height.setSaveEnabled(false);
+
         Seek_touch_area_width = (SeekBar) findViewById(R.id.Seek_touch_area_width);
+        Seek_touch_area_width.setOnSeekBarChangeListener(touchviewWidthSeekBarListener);
+        Seek_touch_area_width.setSaveEnabled(false);
+
+        Seek_touch_area_position = (SeekBar) findViewById(R.id.Seek_touch_area_position);
+        Seek_touch_area_position.setOnSeekBarChangeListener(touchviewPositionSeekBarListener);
+        Seek_touch_area_position.setSaveEnabled(false);
+
         TV_touchview_current_width = (TextView) findViewById(R.id.TV_touchview_current_width);
         TV_touchview_total_width = (TextView) findViewById(R.id.TV_touchview_total_width);
-        Seek_touch_area_position = (SeekBar) findViewById(R.id.Seek_touch_area_position);
+
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
         IV_my_github = (ImageView) findViewById(R.id.IV_my_github);
         IV_my_github.setOnClickListener(this);
-        //Init all view setting
+        //Init common setting
         initStylusMode();
+        //Init orientation setting
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Log.e("test","ORIENTATION_PORTRAIT");
+            isPortrait = true;
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Log.e("test","ORIENTATION_LANDSCAPE");
+            isPortrait = false;
+        }
+        //Init all view setting
         initSeekBar();
     }
 
@@ -79,30 +102,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initSeekBar() {
+        //Default
         int screenHeight = ScreenHepler.getScreenHeight(this);
         screenWidth = ScreenHepler.getScreenWidth(this);
-        int touchviewWidgth = SPFManager.getTouchviewWidth(this);
-
-        //Height
-        Seek_touch_area_height.setOnSeekBarChangeListener(touchviewHeightSeekBarListener);
+        int touchviewWidth;
+        //Default Height init
         Seek_touch_area_height.setMax(screenHeight / 20);
-        Seek_touch_area_height.setProgress(SPFManager.getTouchviewHeight(this));
-        //width
-        Seek_touch_area_width.setOnSeekBarChangeListener(touchviewWidthSeekBarListener);
+
+        //Default width init
         Seek_touch_area_width.setMax(screenWidth);
-        //For first time
-        if (touchviewWidgth == ScreenHepler.getDefautlTouchviewWidth()) {
-            Seek_touch_area_width.setProgress(screenWidth);
-            //set position
-            updateTouchViewPosition(screenWidth, SPFManager.getTouchviewPosition(this));
-        } else {
-            Seek_touch_area_width.setProgress(touchviewWidgth);
-            //set position
-            updateTouchViewPosition(View_touchviewer.getWidth(), SPFManager.getTouchviewPosition(this));
-        }
-        //position ui & listener
+
+        //Default position init
         TV_touchview_total_width.setText("/" + String.valueOf(screenWidth));
-        Seek_touch_area_position.setOnSeekBarChangeListener(touchviewPositionSeekBarListener);
+
+        if (isPortrait) {
+            Log.e("test", "isPortrait");
+            touchviewWidth = SPFManager.getTouchviewPortraitWidth(this);
+            Log.e("test", "touchviewWidth=" + touchviewWidth);
+
+            //Height
+            Seek_touch_area_height.setProgress(SPFManager.getTouchviewPortraitHeight(this));
+            //position  + Width
+            //For match content
+            if (touchviewWidth == ScreenHepler.getDefautlTouchviewWidth()) {
+                Seek_touch_area_width.setProgress(screenWidth);
+                //set position
+                updateTouchViewPosition(screenWidth, SPFManager.getTouchviewPortraitPosition(this));
+            } else {
+                Seek_touch_area_width.setProgress(touchviewWidth);
+                //set position
+                updateTouchViewPosition(View_touchviewer.getWidth(), SPFManager.getTouchviewPortraitPosition(this));
+            }
+        } else {
+            Log.e("test", "Landscape");
+            touchviewWidth = SPFManager.getTouchviewLandscapeWidth(this);
+            Log.e("test", "touchviewWidth=" + touchviewWidth);
+            //Height
+            Seek_touch_area_height.setProgress(SPFManager.getTouchviewLandscapeHeight(this));
+            //position  + Width
+            //For match content
+            if (touchviewWidth == ScreenHepler.getDefautlTouchviewWidth()) {
+                Seek_touch_area_width.setProgress(screenWidth);
+                //set position
+                updateTouchViewPosition(screenWidth, SPFManager.getTouchviewLandscapePosition(this));
+            } else {
+                Seek_touch_area_width.setProgress(touchviewWidth);
+                //set position
+                updateTouchViewPosition(View_touchviewer.getWidth(), SPFManager.getTouchviewLandscapePosition(this));
+            }
+        }
+
 
     }
 
@@ -119,7 +168,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar.OnSeekBarChangeListener touchviewHeightSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            SPFManager.setTouchviewHeight(MainActivity.this, seekBar.getProgress());
+            if (isPortrait) {
+                SPFManager.setTouchviewPortraitHeight(MainActivity.this, seekBar.getProgress());
+            } else {
+                SPFManager.setTouchviewLandscapeHeight(MainActivity.this, seekBar.getProgress());
+            }
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
             if (mAccessibilityService != null) {
                 mAccessibilityService.updateTouchView(seekBar.getProgress(), null, null);
@@ -144,12 +197,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             updateTouchViewPosition(seekBar.getProgress(), -1);
-            SPFManager.setTouchviewPosition(MainActivity.this, Seek_touch_area_position.getProgress());
-            SPFManager.setTouchviewWidth(MainActivity.this, seekBar.getProgress());
+            if (isPortrait) {
+                SPFManager.setTouchviewPortraitPosition(MainActivity.this, Seek_touch_area_position.getProgress());
+            } else{
+                SPFManager.setTouchviewLandscapePosition(MainActivity.this, Seek_touch_area_position.getProgress());
+            }
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
-            if (mAccessibilityService != null) {
-                mAccessibilityService.updateTouchView(null, seekBar.getProgress(), Seek_touch_area_position.getProgress());
-                mAccessibilityService = null;
+            if (seekBar.getProgress() == seekBar.getMax()) {
+                if (isPortrait) {
+                    SPFManager.setTouchviewPortraitWidth(MainActivity.this, ViewGroup.LayoutParams.MATCH_PARENT);
+                } else{
+                    SPFManager.setTouchviewLandscapeWidth(MainActivity.this, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                }
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateTouchView(null, ViewGroup.LayoutParams.MATCH_PARENT, Seek_touch_area_position.getProgress());
+                    mAccessibilityService = null;
+                }
+            } else {
+                if (isPortrait) {
+                    SPFManager.setTouchviewPortraitWidth(MainActivity.this, seekBar.getProgress());
+                }else {
+                    SPFManager.setTouchviewLandscapeWidth(MainActivity.this, seekBar.getProgress());
+                }
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateTouchView(null, seekBar.getProgress(), Seek_touch_area_position.getProgress());
+                    mAccessibilityService = null;
+                }
             }
         }
 
@@ -170,7 +244,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar.OnSeekBarChangeListener touchviewPositionSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            SPFManager.setTouchviewPosition(MainActivity.this, seekBar.getProgress());
+            if (isPortrait) {
+                SPFManager.setTouchviewPortraitPosition(MainActivity.this, seekBar.getProgress());
+            } else {
+                SPFManager.setTouchviewLandscapePosition(MainActivity.this, seekBar.getProgress());
+            }
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
             if (mAccessibilityService != null) {
                 mAccessibilityService.updateTouchView(null, null, seekBar.getProgress());

@@ -85,7 +85,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            miniTouchGestureHeight = SPFManager.getTouchviewHeight(this) / miniTouchGestureHeightSensitivity;
+            miniTouchGestureHeight = SPFManager.getTouchviewPortraitHeight(this) / miniTouchGestureHeightSensitivity;
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
             initTouchView();
         } else {
@@ -124,8 +124,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         touchView = new View(this);
         //transparent color
         touchView.setBackgroundColor(Color.parseColor("#00000000"));
-        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewHeight(this),
-                SPFManager.getTouchviewWidth(this), SPFManager.getTouchviewPosition(this)));
+        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewPortraitHeight(this),
+                SPFManager.getTouchviewPortraitWidth(this), SPFManager.getTouchviewPortraitPosition(this)));
         touchView.setOnTouchListener(touchViewOnTouchListener);
     }
 

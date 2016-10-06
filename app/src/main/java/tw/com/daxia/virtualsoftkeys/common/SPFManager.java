@@ -12,9 +12,14 @@ import tw.com.daxia.virtualsoftkeys.BuildConfig;
 public class SPFManager {
 
     private static final String SPF_CONFIG_NEME = "CONFIG";
-    private static final String CONFIG_TOUCHVIEW_HEIGHT = "OUCHVIEW_HEIGHT";
-    private static final String CONFIG_TOUCHVIEW_WIDTH = "TOUCHVIEW_WIDTH";
-    private static final String CONFIG_TOUCHVIEW_POSITION = "TOUCHVIEW_POSITION";
+    //Portrait
+    private static final String CONFIG_P_TOUCHVIEW_HEIGHT = "P_TOUCHVIEW_HEIGHT";
+    private static final String CONFIG_P_TOUCHVIEW_WIDTH = "P_TOUCHVIEW_WIDTH";
+    private static final String CONFIG_P_TOUCHVIEW_POSITION = "P_TOUCHVIEW_POSITION";
+    //Landscape
+    private static final String CONFIG_L_TOUCHVIEW_HEIGHT = "L_TOUCHVIEW_HEIGHT";
+    private static final String CONFIG_L_TOUCHVIEW_WIDTH = "L_TOUCHVIEW_WIDTH";
+    private static final String CONFIG_L_TOUCHVIEW_POSITION = "L_TOUCHVIEW_POSITION";
 
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
 
@@ -29,46 +34,90 @@ public class SPFManager {
 
 
     /**
-     * Setting Method
+     * Portrait Setting Method
      */
-
-    public static int getTouchviewHeight(Context context) {
+    public static int getTouchviewPortraitHeight(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
-        return settings.getInt(CONFIG_TOUCHVIEW_HEIGHT, ScreenHepler.getDefautlTouchviewHeight(context));
+        return settings.getInt(CONFIG_P_TOUCHVIEW_HEIGHT, ScreenHepler.getDefautlTouchviewHeight(context));
     }
 
-    public static void setTouchviewHeight(Context context, int heightPx) {
+    public static void setTouchviewPortraitHeight(Context context, int heightPx) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
-        PE.putInt(CONFIG_TOUCHVIEW_HEIGHT, heightPx);
+        PE.putInt(CONFIG_P_TOUCHVIEW_HEIGHT, heightPx);
         PE.commit();
     }
 
-    public static int getTouchviewWidth(Context context) {
+    public static int getTouchviewPortraitWidth(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
-        return settings.getInt(CONFIG_TOUCHVIEW_WIDTH, ScreenHepler.getDefautlTouchviewWidth());
+        return settings.getInt(CONFIG_P_TOUCHVIEW_WIDTH, ScreenHepler.getDefautlTouchviewWidth());
     }
 
-    public static void setTouchviewWidth(Context context, int widthPx) {
+    public static void setTouchviewPortraitWidth(Context context, int widthPx) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
-        PE.putInt(CONFIG_TOUCHVIEW_WIDTH, widthPx);
+        PE.putInt(CONFIG_P_TOUCHVIEW_WIDTH, widthPx);
         PE.commit();
     }
 
-    public static int getTouchviewPosition(Context context) {
+    public static int getTouchviewPortraitPosition(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         //Default width is match_content , so  position = 0
-        return settings.getInt(CONFIG_TOUCHVIEW_POSITION, 0);
+        return settings.getInt(CONFIG_P_TOUCHVIEW_POSITION, 0);
     }
 
-    public static void setTouchviewPosition(Context context, int position) {
+    public static void setTouchviewPortraitPosition(Context context, int position) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
-        PE.putInt(CONFIG_TOUCHVIEW_POSITION, position);
+        PE.putInt(CONFIG_P_TOUCHVIEW_POSITION, position);
         PE.commit();
     }
 
+    /**
+     * Landscape Setting Method
+     */
+
+    public static int getTouchviewLandscapeHeight(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getInt(CONFIG_L_TOUCHVIEW_HEIGHT, ScreenHepler.getDefautlTouchviewHeight(context));
+    }
+
+    public static void setTouchviewLandscapeHeight(Context context, int heightPx) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_L_TOUCHVIEW_HEIGHT, heightPx);
+        PE.commit();
+    }
+
+    public static int getTouchviewLandscapeWidth(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getInt(CONFIG_L_TOUCHVIEW_WIDTH, ScreenHepler.getDefautlTouchviewWidth());
+    }
+
+    public static void setTouchviewLandscapeWidth(Context context, int widthPx) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_L_TOUCHVIEW_WIDTH, widthPx);
+        PE.commit();
+    }
+
+    public static int getTouchviewLandscapePosition(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        //Default width is match_content , so  position = 0
+        return settings.getInt(CONFIG_L_TOUCHVIEW_POSITION, 0);
+    }
+
+    public static void setTouchviewLandscapePosition(Context context, int position) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_L_TOUCHVIEW_POSITION, position);
+        PE.commit();
+    }
+
+
+    /**
+     * common Setting Method
+     */
 
     public static boolean getStylusOnlyMode(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
