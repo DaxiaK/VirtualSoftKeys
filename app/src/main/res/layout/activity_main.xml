@@ -142,12 +142,19 @@
                 android:layout_marginTop="10dp" />
 
 
+            <View
+                android:layerType="software"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dash_line" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/config_shared_title"
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
@@ -190,10 +197,10 @@
 
 
             <ImageView
-                android:layout_gravity="center"
                 android:id="@+id/IV_my_github"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/ic_github_logo" />
 
