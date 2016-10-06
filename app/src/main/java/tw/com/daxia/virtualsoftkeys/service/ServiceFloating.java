@@ -3,6 +3,7 @@ package tw.com.daxia.virtualsoftkeys.service;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
@@ -41,6 +42,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     private boolean stylusOnlyMode;
     private boolean canDrawOverlays;
+    private boolean isPortrait;
+
 
     /**
      * View
@@ -71,6 +74,21 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            isPortrait = true;
+            updateTouchView(SPFManager.getTouchviewPortraitHeight(this),SPFManager.getTouchviewPortraitWidth(this),
+                    SPFManager.getTouchviewPortraitPosition(this));
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            isPortrait = false;
+            updateTouchView(SPFManager.getTouchviewLandscapeHeight(this),SPFManager.getTouchviewLandscapeWidth(this),
+                    SPFManager.getTouchviewLandscapePosition(this));
+        }
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
     }
@@ -85,8 +103,12 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            miniTouchGestureHeight = SPFManager.getTouchviewPortraitHeight(this) / miniTouchGestureHeightSensitivity;
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                isPortrait = true;
+            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                isPortrait = false;
+            }
             initTouchView();
         } else {
             Toast.makeText(this, getString(R.string.Toast_allow_system_alert_first), Toast.LENGTH_LONG).show();
@@ -122,10 +144,19 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     private void initTouchView() {
         touchView = new View(this);
-        //transparent color
         touchView.setBackgroundColor(Color.parseColor("#00000000"));
-        windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewPortraitHeight(this),
-                SPFManager.getTouchviewPortraitWidth(this), SPFManager.getTouchviewPortraitPosition(this)));
+        if(isPortrait){
+            miniTouchGestureHeight = SPFManager.getTouchviewPortraitHeight(this) / miniTouchGestureHeightSensitivity;
+            //transparent color
+            windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewPortraitHeight(this),
+                    SPFManager.getTouchviewPortraitWidth(this), SPFManager.getTouchviewPortraitPosition(this)));
+       }
+        else {
+            miniTouchGestureHeight = SPFManager.getTouchviewLandscapeHeight(this) / miniTouchGestureHeightSensitivity;
+            //transparent color
+            windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewLandscapeHeight(this),
+                    SPFManager.getTouchviewLandscapeWidth(this), SPFManager.getTouchviewLandscapePosition(this)));
+        }
         touchView.setOnTouchListener(touchViewOnTouchListener);
     }
 
