@@ -15,9 +15,9 @@ A simple , safe  and easy softKeys ( navigation bar).
 3. Add teaching page
 
 ## Screenshot
-![](/screenshot/1.jpg) 
-![](/screenshot/2.jpg) 
-![](/screenshot/3.jpg) 
+![](/screenshot/1.png) 
+![](/screenshot/2.png) 
+![](/screenshot/3.png) 
 
 ##APK
 [![](/screenshot/google-play-badge.png) ](https://play.google.com/store/apps/details?id=tw.com.daxia.virtualsoftkeys)
