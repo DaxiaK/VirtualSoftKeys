@@ -17,6 +17,7 @@ A simple , safe  and easy softKeys ( navigation bar).
 ## Screenshot
 ![](/screenshot/1.jpg) 
 ![](/screenshot/2.jpg) 
+![](/screenshot/3.jpg) 
 
 ##APK
 [![](/screenshot/google-play-badge.png) ](https://play.google.com/store/apps/details?id=tw.com.daxia.virtualsoftkeys)

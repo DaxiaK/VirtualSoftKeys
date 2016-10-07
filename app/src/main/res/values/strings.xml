@@ -29,10 +29,10 @@
     <string name="setting_stylus_mode_content">Select Stylus mode if your device supports stylus</string>
     <string name="setting_stylus_mode_button">Stylus mode</string>
 
-    <string name="config_name_title">Configuration:</string>
+    <string name="config_name_title">Config:</string>
     <string name="config_name_portrait">Portrait</string>
     <string name="config_name_landscape">Landscape</string>
-    <string name="config_shared_title">Shared Configuration</string>
+    <string name="config_shared_title">Shared Config</string>
 
 
 

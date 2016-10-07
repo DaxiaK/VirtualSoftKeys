@@ -41,14 +41,14 @@
                     android:layout_marginRight="5dp"
                     android:text="@string/config_name_title"
                     android:textColor="@android:color/black"
-                    android:textSize="22sp" />
+                    android:textSize="28sp" />
 
                 <TextView
                     android:id="@+id/TV_config_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="22sp" />
+                    android:textSize="28sp" />
             </LinearLayout>
 
 
@@ -143,21 +143,20 @@
 
 
             <View
-                android:layerType="software"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/dash_line" />
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/dash_line"
+                android:layerType="software" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/config_shared_title"
                 android:textColor="@android:color/black"
-                android:textSize="22sp" />
+                android:textSize="28sp" />
 
 
             <LinearLayout
@@ -191,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="?android:attr/listChoiceIndicatorSingle"
+                android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
                 android:gravity="center"
                 android:text="@string/setting_stylus_mode_button" />
 

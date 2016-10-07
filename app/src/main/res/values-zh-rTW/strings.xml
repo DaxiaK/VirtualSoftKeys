@@ -31,7 +31,7 @@
     <string name="config_name_title">觸碰設定檔:</string>
     <string name="config_name_portrait">直立螢幕</string>
     <string name="config_name_landscape">橫式螢幕</string>
-    <string name="config_shared_title">共用設定</string>
+    <string name="config_shared_title">共同設定</string>
 
 
 </resources>
