@@ -33,5 +33,13 @@
     <string name="config_name_landscape">橫式螢幕</string>
     <string name="config_shared_title">共同設定</string>
 
+    <!--Description Dialog-->
+    <string name="description_howtouse_title">如何使用</string>
+    <string name="description_howtouse_content">在設定好的觸碰區域內向上滑動即可打開Softkeys bar</string>
+    <string name="description_config_title">螢幕設定檔</string>
+    <string name="description_config_content">旋轉螢幕來切換直立或橫式的設定檔，不同螢幕方向可以設定不同的觸碰區域</string>
+    <string name="description_clsoe">不再提醒</string>
+    <string name="description_i_knew">我知道了</string>
+
 
 </resources>

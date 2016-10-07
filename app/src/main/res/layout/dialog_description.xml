@@ -20,26 +20,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="觸發手勢"
+                android:text="@string/description_howtouse_title"
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="85dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:minHeight="50dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/iv_touch_description" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="在設定好的處碰區域向上滑動來打開Softkeys bar"
+                    android:text="@string/description_howtouse_content"
                     android:textColor="#828282"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -50,27 +53,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="螢幕設定檔"
+                android:text="@string/description_config_title"
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="85dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:minHeight="50dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/iv_rotation_description" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="旋轉螢幕來切換直立或橫式的設定檔，不同螢幕方向可以設定不同的觸碰區域"
+                    android:text="@string/description_config_content"
                     android:textColor="#828282"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -83,13 +89,13 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
                 android:gravity="center"
-                android:text="不再提醒" />
+                android:text="@string/description_clsoe" />
 
             <Button
                 android:id="@+id/But_dismiss_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我知道了"
+                android:text="@string/description_i_knew"
                 android:textAllCaps="false" />
         </LinearLayout>
     </ScrollView>
