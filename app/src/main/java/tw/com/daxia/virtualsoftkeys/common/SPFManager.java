@@ -12,16 +12,21 @@ import tw.com.daxia.virtualsoftkeys.BuildConfig;
 public class SPFManager {
 
     private static final String SPF_CONFIG_NEME = "CONFIG";
-    //Portrait
+    //Portrait config
     private static final String CONFIG_P_TOUCHVIEW_HEIGHT = "P_TOUCHVIEW_HEIGHT";
     private static final String CONFIG_P_TOUCHVIEW_WIDTH = "P_TOUCHVIEW_WIDTH";
     private static final String CONFIG_P_TOUCHVIEW_POSITION = "P_TOUCHVIEW_POSITION";
-    //Landscape
+    //Landscape config
     private static final String CONFIG_L_TOUCHVIEW_HEIGHT = "L_TOUCHVIEW_HEIGHT";
     private static final String CONFIG_L_TOUCHVIEW_WIDTH = "L_TOUCHVIEW_WIDTH";
     private static final String CONFIG_L_TOUCHVIEW_POSITION = "L_TOUCHVIEW_POSITION";
 
+    //Shared config
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
+
+    //Description
+    private static final String DESCRIPTION_CLOSE = "DESCRIPTION_CLOSE";
+
 
     private static final String SPF_CRASHLOG = "CRASHLOG";
     private static final String CRASHLOG_MESSAGE = "CRASHLOG_MESSAGE";
@@ -116,7 +121,7 @@ public class SPFManager {
 
 
     /**
-     * common Setting Method
+     * Shared Setting Method
      */
 
     public static boolean getStylusOnlyMode(Context context) {
@@ -128,6 +133,22 @@ public class SPFManager {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
         PE.putBoolean(CONFIG_STYLUS_ONLY_MODE, stylusOnly);
+        PE.commit();
+    }
+
+    /**
+     * Shared Setting Method
+     */
+
+    public static boolean getDescriptionClose(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getBoolean(DESCRIPTION_CLOSE, false);
+    }
+
+    public static void setDescriptionClose(Context context, boolean close) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putBoolean(DESCRIPTION_CLOSE, close);
         PE.commit();
     }
 

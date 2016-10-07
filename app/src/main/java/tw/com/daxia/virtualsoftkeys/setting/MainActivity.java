@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,12 +32,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final static String TAG = "MainActivity";
     private final static String MY_GIT_HUB_URL = "https://github.com/erttyy8821/VirtualSoftKeys";
+    private final static int MAX_HEIGHT_PERCENTAGE = 20;
+    private final static String descriptionDialogTAG = "descriptionDialog";
+
+    /**
+     * UI
+     */
     private SeekBar Seek_touch_area_height, Seek_touch_area_width;
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
     private CheckedTextView CTV_stylus_only_mode;
     private View View_touchviewer;
     private ImageView IV_my_github;
+    /**
+     * Config
+     */
     private int screenWidth;
     private boolean isPortrait;
 
@@ -70,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initStylusMode();
         //Init All Seekbar
         initSeekBar();
+        //Show Description Dialog
+        showDescription();
     }
 
     @Override
@@ -91,6 +105,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    private void showDescription() {
+        if (!SPFManager.getDescriptionClose(this)) {
+            FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+            Fragment prev = getSupportFragmentManager().findFragmentByTag(descriptionDialogTAG);
+            if (prev != null) {
+                DialogFragment df = (DialogFragment) prev;
+                df.dismiss();
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+
+            DescriptionDialog descriptionDialog = new DescriptionDialog();
+            descriptionDialog.show(this.getSupportFragmentManager(), descriptionDialogTAG);
+        }
     }
 
     private void initStylusMode() {
@@ -136,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         screenWidth = ScreenHepler.getScreenWidth(this);
         int touchviewWidth;
         //Default Height init
-        Seek_touch_area_height.setMax(screenHeight / 20);
+        Seek_touch_area_height.setMax(screenHeight / MAX_HEIGHT_PERCENTAGE);
 
         //Default width init
         Seek_touch_area_width.setMax(screenWidth);
@@ -177,11 +207,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void updateTouchViewPosition(int toughviewWidth, int positionFromSPF) {
-
-        Log.e("test", "screenWidth=" + screenWidth);
-        Log.e("test", "toughviewWidth=" + toughviewWidth);
-        Log.e("test", "screenWidth - toughviewWidth=" + (screenWidth - toughviewWidth));
-
         Seek_touch_area_position.setMax(screenWidth - toughviewWidth);
         if (positionFromSPF >= 0) {
             Seek_touch_area_position.setProgress(positionFromSPF);

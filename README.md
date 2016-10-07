@@ -4,22 +4,44 @@
 
 A simple , safe  and easy softKeys ( navigation bar).
 
+This project just was used for my device to solve hardware button problem.
+If you have any idea for any thing, please let me know!
+
+
 ## Features
 *  As system navigation bar
 *  No any extra permission
 *  Support stylus
+
 
 ##Todo
 1. More setting at  navigation bar and touch view
 2. More color and icon for choice
 3. Add teaching page
 
+
+## Known issues
+In some devices (e.g. ASUS Z500M)  , accessibilty  has some problem , I can't solve it .
+Just waiting devices's compamy to fix it . 
+
+The bug is:
+
+1. if you open accessibilty on setting page  when App had be onDestory, onServiceConnected can't  be called!
+2. After devices suspend and wake up , sometimes the touch view can't be touched in some postion!
+3. Accessibilty service was turn off but it still show turn on in accessibilty setting page after system reboot or apk update!
+
+You can restart accessibilty service to solving all bug ! 
+
+
 ## Screenshot
-![](/screenshot/1.jpg) 
-![](/screenshot/2.jpg) 
+![](/screenshot/1.png) 
+![](/screenshot/2.png) 
+![](/screenshot/3.png) 
+
 
 ##APK
 [![](/screenshot/google-play-badge.png) ](https://play.google.com/store/apps/details?id=tw.com.daxia.virtualsoftkeys)
+
 
 ## License
 
