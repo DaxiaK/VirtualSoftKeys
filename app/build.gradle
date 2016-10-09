@@ -8,8 +8,8 @@ android {
         applicationId "tw.com.daxia.virtualsoftkeys"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 2
-        versionName "0.1.1.20161004-1"
+        versionCode 3
+        versionName "0.1.2.20161009-1"
     }
     buildTypes {
         release {
