@@ -23,6 +23,7 @@ public class SPFManager {
 
     //Shared config
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
+    private static final String CONFIG_DISAPPEAR_TIME = "DISAPPEAR_TIME";
 
     //Description
     private static final String DESCRIPTION_CLOSE = "DESCRIPTION_CLOSE";
@@ -133,6 +134,29 @@ public class SPFManager {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
         PE.putBoolean(CONFIG_STYLUS_ONLY_MODE, stylusOnly);
+        PE.commit();
+    }
+
+    /**
+     * Get the disappear time array position
+     * @param context
+     * @return
+     */
+    public static int getDisappearPosition(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        //Default position is 0 = DisappearObj.TIME_NEVER
+        return settings.getInt(CONFIG_DISAPPEAR_TIME, 0);
+    }
+
+    /**
+     * Save the disappear time array position
+     * @param context
+     * @param position by bar_disappear_time
+     */
+    public static void setDisappearPosition(Context context, int position) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_DISAPPEAR_TIME, position);
         PE.commit();
     }
 

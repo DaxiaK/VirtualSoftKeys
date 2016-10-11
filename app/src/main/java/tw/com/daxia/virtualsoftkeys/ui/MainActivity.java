@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
@@ -135,6 +136,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter disappearAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.bar_disappear_time));
         SP_bar_disappear_time.setAdapter(disappearAdapter);
+        SP_bar_disappear_time.setSelection(SPFManager.getDisappearPosition(this));
+        SP_bar_disappear_time.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateDisappearTime(position);
+                    mAccessibilityService = null;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            //Do nothing
+            }
+        });
     }
 
     private void initStylusMode() {

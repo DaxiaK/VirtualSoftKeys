@@ -26,6 +26,7 @@ import tw.com.daxia.virtualsoftkeys.BuildConfig;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
+import tw.com.daxia.virtualsoftkeys.setting.DisappearObj;
 import tw.com.daxia.virtualsoftkeys.ui.MainActivity;
 
 
@@ -42,6 +43,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
      */
     private int miniTouchGestureHeight;
     private final static int miniTouchGestureHeightSensitivity = 4;
+
+    private DisappearObj disappearObj;
 
     private boolean stylusOnlyMode;
     private boolean canDrawOverlays;
@@ -97,7 +100,10 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        //init
         sSharedInstance = this;
+        disappearObj = new DisappearObj(this);
+        //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
         if (canDrawOverlays) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -199,6 +205,12 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         }
     };
 
+    /**
+     *
+     * Update config by mainActivity
+     *
+     */
+
     public void updateTouchView(@Nullable Integer hieghtPx, @Nullable Integer widthPx, @Nullable Integer position) {
         //set config
         if (touchView != null) {
@@ -220,6 +232,10 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     public void updateStylusOnlyMode(boolean stylusOnly) {
         this.stylusOnlyMode = stylusOnly;
     }
+    public void updateDisappearTime(int spinnerPosition) {
+        this.disappearObj.updateConfigTime(spinnerPosition);
+    }
+
 
     private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -242,7 +258,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             softKeyBar.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    softKeyBarHandler.postDelayed(softKeyBarRunnable, 3000);
+                    hiddenSoftKeyBar();
                     return true;
                 }
             });
@@ -277,10 +293,17 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     /**
      * Handler + Runnable
      */
+
+    private void hiddenSoftKeyBar(){
+        if(disappearObj.getConfigTime() >= DisappearObj.TIME_NOW){
+            softKeyBarHandler.postDelayed(softKeyBarRunnable, disappearObj.getConfigTime());
+        }
+    }
+
     private Runnable softKeyBarRunnable = new Runnable() {
         @Override
         public void run() {
-            if (softKeyBar != null) {
+            if (softKeyBar != null ) {
                 softKeyBar.setVisibility(View.GONE);
             }
         }
@@ -306,7 +329,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
                 break;
         }
-        softKeyBarHandler.postDelayed(softKeyBarRunnable, 3000);
+        hiddenSoftKeyBar();
     }
 
     @Override
