@@ -1,4 +1,4 @@
-package tw.com.daxia.virtualsoftkeys.setting;
+package tw.com.daxia.virtualsoftkeys.ui;
 
 import android.app.Dialog;
 import android.content.Intent;

@@ -8,10 +8,12 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +26,7 @@ import tw.com.daxia.virtualsoftkeys.BuildConfig;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
-import tw.com.daxia.virtualsoftkeys.setting.MainActivity;
+import tw.com.daxia.virtualsoftkeys.ui.MainActivity;
 
 
 public class ServiceFloating extends AccessibilityService implements View.OnClickListener, View.OnLongClickListener {
@@ -32,6 +34,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private final static String GOOGLE_APP_PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
     private static ServiceFloating sSharedInstance;
+    private Handler softKeyBarHandler = new Handler();
 
 
     /**
@@ -43,7 +46,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private boolean stylusOnlyMode;
     private boolean canDrawOverlays;
     private boolean isPortrait;
-
 
     /**
      * View
@@ -240,20 +242,21 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             softKeyBar.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (softKeyBar != null) {
-                        softKeyBar.setVisibility(View.GONE);
-                    }
+                    softKeyBarHandler.postDelayed(softKeyBarRunnable, 3000);
                     return true;
                 }
             });
+            //Init all button
             ImageButton IB_button_home, IB_button_back, IB_button_recents;
             IB_button_back = (ImageButton) softKeyBar.findViewById(R.id.IB_button_back);
             IB_button_back.setOnClickListener(this);
+            IB_button_back.setOnLongClickListener(this);
             IB_button_home = (ImageButton) softKeyBar.findViewById(R.id.IB_button_home);
             IB_button_home.setOnClickListener(this);
             IB_button_home.setOnLongClickListener(this);
             IB_button_recents = (ImageButton) softKeyBar.findViewById(R.id.IB_button_recents);
             IB_button_recents.setOnClickListener(this);
+            IB_button_recents.setOnLongClickListener(this);
             final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     ScreenHepler.dpToPixel(getResources(), 48),
@@ -271,9 +274,27 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     }
 
+    /**
+     * Handler + Runnable
+     */
+    private Runnable softKeyBarRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (softKeyBar != null) {
+                softKeyBar.setVisibility(View.GONE);
+            }
+        }
+    };
+
+
+    /**
+     * Implements
+     */
 
     @Override
     public void onClick(View v) {
+        //Add HapticFeedback
+        v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         switch (v.getId()) {
             case R.id.IB_button_back:
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
@@ -285,9 +306,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
                 break;
         }
-        if (softKeyBar != null) {
-            softKeyBar.setVisibility(View.GONE);
-        }
+        softKeyBarHandler.postDelayed(softKeyBarRunnable, 3000);
     }
 
     @Override
