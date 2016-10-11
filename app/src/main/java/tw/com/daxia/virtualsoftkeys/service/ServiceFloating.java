@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -22,12 +21,10 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import tw.com.daxia.virtualsoftkeys.BuildConfig;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.setting.DisappearObj;
-import tw.com.daxia.virtualsoftkeys.ui.MainActivity;
 
 
 public class ServiceFloating extends AccessibilityService implements View.OnClickListener, View.OnLongClickListener {
@@ -43,6 +40,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
      */
     private int miniTouchGestureHeight;
     private final static int miniTouchGestureHeightSensitivity = 4;
+    private final static int SOFTKEY_BAR_HEIGHT = 48;
 
     private DisappearObj disappearObj;
 
@@ -106,10 +104,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
         if (canDrawOverlays) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
             if (ScreenHepler.isPortrait(getResources())) {
                 isPortrait = true;
@@ -119,11 +113,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             initTouchView();
         } else {
             Toast.makeText(this, getString(R.string.Toast_allow_system_alert_first), Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + this.getPackageName()));
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
         }
     }
 
@@ -167,7 +156,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     }
 
     private View.OnTouchListener touchViewOnTouchListener = new View.OnTouchListener() {
-        private float initialTouchX;
+        private float initialTouchY;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -185,17 +174,10 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         private void touchViewTouchEvent(MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    if (BuildConfig.DEBUG) {
-                        Log.d("test", "initialTouchX =" + initialTouchX);
-                    }
-                    initialTouchX = event.getRawX();
+                    initialTouchY = event.getRawY();
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (BuildConfig.DEBUG) {
-                        Log.d("test", "ACTION_UP,initialTouchX =" + initialTouchX);
-                        Log.d("test", "ACTION_UP,getRawX =" + event.getRawX());
-                    }
-                    if ((event.getRawX() - initialTouchX) > miniTouchGestureHeight) {
+                    if ((initialTouchY - event.getRawY()) > miniTouchGestureHeight) {
                         showSoftKeyBar();
                     }
                     break;
@@ -206,18 +188,16 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     };
 
     /**
-     *
      * Update config by mainActivity
-     *
      */
 
-    public void updateTouchView(@Nullable Integer hieghtPx, @Nullable Integer widthPx, @Nullable Integer position) {
+    public void updateTouchView(@Nullable Integer heightPx, @Nullable Integer widthPx, @Nullable Integer position) {
         //set config
         if (touchView != null) {
             WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchView.getLayoutParams();
-            if (hieghtPx != null) {
-                this.miniTouchGestureHeight = hieghtPx / miniTouchGestureHeightSensitivity;
-                params.height = hieghtPx;
+            if (heightPx != null) {
+                this.miniTouchGestureHeight = heightPx / miniTouchGestureHeightSensitivity;
+                params.height = heightPx;
             }
             if (widthPx != null) {
                 params.width = widthPx;
@@ -232,6 +212,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     public void updateStylusOnlyMode(boolean stylusOnly) {
         this.stylusOnlyMode = stylusOnly;
     }
+
     public void updateDisappearTime(int spinnerPosition) {
         this.disappearObj.updateConfigTime(spinnerPosition);
     }
@@ -256,10 +237,35 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             LayoutInflater li = LayoutInflater.from(this);
             softKeyBar = li.inflate(R.layout.navigation_bar, null, true);
             softKeyBar.setOnTouchListener(new View.OnTouchListener() {
+                private float firstSoftKeyTouchY;
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
+                    if (stylusOnlyMode) {
+                        if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+                            touchViewTouchEvent(event);
+                        }
+                    } else {
+                        touchViewTouchEvent(event);
+                    }
                     hiddenSoftKeyBar();
-                    return true;
+                    return false;
+                }
+
+                private void touchViewTouchEvent(MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            firstSoftKeyTouchY = event.getRawY();
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            //Close the softKeyBar after swiping down more the 1/4 height
+                            if ((event.getRawY() - firstSoftKeyTouchY) > (ScreenHepler.dpToPixel(getResources(), SOFTKEY_BAR_HEIGHT) / 4)) {
+                                softKeyBarHandler.post(softKeyBarRunnable);
+                            }
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            break;
+                    }
                 }
             });
             //Init all button
@@ -275,7 +281,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             IB_button_recents.setOnLongClickListener(this);
             final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
-                    ScreenHepler.dpToPixel(getResources(), 48),
+                    ScreenHepler.dpToPixel(getResources(), SOFTKEY_BAR_HEIGHT),
                     WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                     WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                     PixelFormat.TRANSLUCENT);
@@ -294,8 +300,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
      * Handler + Runnable
      */
 
-    private void hiddenSoftKeyBar(){
-        if(disappearObj.getConfigTime() >= DisappearObj.TIME_NOW){
+    private void hiddenSoftKeyBar() {
+        if (disappearObj.getConfigTime() >= DisappearObj.TIME_NOW) {
             softKeyBarHandler.postDelayed(softKeyBarRunnable, disappearObj.getConfigTime());
         }
     }
@@ -303,7 +309,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private Runnable softKeyBarRunnable = new Runnable() {
         @Override
         public void run() {
-            if (softKeyBar != null ) {
+            if (softKeyBar != null) {
                 softKeyBar.setVisibility(View.GONE);
             }
         }

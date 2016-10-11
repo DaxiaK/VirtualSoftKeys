@@ -194,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginRight="5dp"
-                    android:text="消失時間:"
+                    android:text="@string/config_disappear_time_title"
                     android:textColor="@android:color/black"
                     android:textSize="22sp" />
 
@@ -202,7 +202,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Softkeybar的消失時間"
+                    android:text="@string/config_disappear_time_content"
                     android:textColor="#828282"
                     android:textSize="16sp" />
 
