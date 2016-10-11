@@ -11,7 +11,7 @@
     <string name="Permission_allow_system_alert_first">Please allow draw over apps permission</string>
     <string name="Permission_allowed">Permission Granted</string>
     <string name="Permission_allow_system_alert_first_and_restart_service">"Please allow this permission first , and select VirtualSoftKeys in accessibility"</string>
-    <string name="Toast_allow_system_alert_first">"Please allow this permission first"</string>
+    <string name="Toast_allow_system_alert_first">"Please allow draw over apps permission first"</string>
 
 
     <!--Accessibility setting-->
@@ -33,10 +33,12 @@
     <string name="config_name_portrait">Portrait</string>
     <string name="config_name_landscape">Landscape</string>
     <string name="config_shared_title">Shared config</string>
+    <string name="config_disappear_time_title">Disappear:</string>
+    <string name="config_disappear_time_content">Time for disappearing Softkey bar</string>
 
     <!--Description Dialog-->
     <string name="description_howtouse_title">How to use</string>
-    <string name="description_howtouse_content">Swiping up in touch view for opening the Softkeys bar</string>
+    <string name="description_howtouse_content">Swiping up in touch view for opening the Softkey bar,then swiping down can cancel</string>
     <string name="description_config_title">Screen config</string>
     <string name="description_config_content">Rotating screen for changing the portrait or landscape config ,they are independent value in every config</string>
     <string name="description_clsoe">Don\'t remind</string>

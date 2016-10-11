@@ -1,4 +1,4 @@
-package tw.com.daxia.virtualsoftkeys.setting;
+package tw.com.daxia.virtualsoftkeys.ui;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -14,10 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import tw.com.daxia.virtualsoftkeys.BuildConfig;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
     private CheckedTextView CTV_stylus_only_mode;
+    private Spinner SP_bar_disappear_time;
+
     private View View_touchviewer;
     private ImageView IV_my_github;
     /**
@@ -70,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         TV_config_name = (TextView) findViewById(R.id.TV_config_name);
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
+
+        SP_bar_disappear_time = (Spinner) findViewById(R.id.SP_bar_disappear_time);
+
         IV_my_github = (ImageView) findViewById(R.id.IV_my_github);
         IV_my_github.setOnClickListener(this);
         //Init orientation
@@ -78,8 +86,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             isPortrait = false;
         }
-        //Init common setting
+        //Init shared setting
         initStylusMode();
+        initSpinner();
         //Init All Seekbar
         initSeekBar();
         //Show Description Dialog
@@ -121,6 +130,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DescriptionDialog descriptionDialog = new DescriptionDialog();
             descriptionDialog.show(this.getSupportFragmentManager(), descriptionDialogTAG);
         }
+    }
+
+    private void initSpinner() {
+        ArrayAdapter disappearAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
+                getResources().getStringArray(R.array.bar_disappear_time));
+        SP_bar_disappear_time.setAdapter(disappearAdapter);
+        SP_bar_disappear_time.setSelection(SPFManager.getDisappearPosition(this));
+        SP_bar_disappear_time.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateDisappearTime(position);
+                    mAccessibilityService = null;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            //Do nothing
+            }
+        });
     }
 
     private void initStylusMode() {

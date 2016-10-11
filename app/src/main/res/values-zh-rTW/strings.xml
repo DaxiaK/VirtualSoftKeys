@@ -3,7 +3,7 @@
 
     <!--Permission Dialog-->
     <string name="Permission_draw_overlays_title">1.繪製權限</string>
-    <string name="Permission_draw_overlays_content">允許這個權限來顯示NavigationBar(SoftKeyBar)。\n詳細位置在:設定-應用程式-進階-在其他應用程式上層繪製內容-VirtualSoftKeys</string>
+    <string name="Permission_draw_overlays_content">允許這個權限來顯示SoftKey Bar(Navigation Bar)。\n詳細位置在:設定-應用程式-進階-在其他應用程式上層繪製內容-VirtualSoftKeys</string>
     <string name="Permission_accessibility_title">2.無障礙設定服務</string>
     <string name="Permission_accessibility_content">打開服務來使Back,Home,Recents按鈕運作。\n詳細位置在:設定-無障礙設定-VirtualSoftKeys</string>
 
@@ -25,17 +25,19 @@
     <string name="setting_gesture_position_content">用來觸發手勢的區域位置</string>
 
     <string name="setting_stylus_mode_title">觸控筆模式:</string>
-    <string name="setting_stylus_mode_content">只允系統支援的觸控筆觸發手勢</string>
+    <string name="setting_stylus_mode_content">只允許系統支援的觸控筆觸發手勢</string>
     <string name="setting_stylus_mode_button">觸控筆模式</string>
 
     <string name="config_name_title">觸碰設定檔:</string>
     <string name="config_name_portrait">直立螢幕</string>
     <string name="config_name_landscape">橫式螢幕</string>
     <string name="config_shared_title">共同設定</string>
+    <string name="config_disappear_time_title">消失時間:</string>
+    <string name="config_disappear_time_content">Softkey bar消失的時間</string>
 
     <!--Description Dialog-->
     <string name="description_howtouse_title">如何使用</string>
-    <string name="description_howtouse_content">在設定好的觸碰區域內向上滑動即可打開Softkeys bar</string>
+    <string name="description_howtouse_content">在設定好的觸碰區域內向上滑動即可打開Softkey Bar，再向下滑可以取消顯示</string>
     <string name="description_config_title">螢幕設定檔</string>
     <string name="description_config_content">旋轉螢幕來切換直立或橫式的設定檔，不同螢幕方向可以設定不同的觸碰區域</string>
     <string name="description_clsoe">不再提醒</string>
