@@ -9,6 +9,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
@@ -21,6 +22,8 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
+
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
@@ -32,8 +35,11 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private final static String GOOGLE_APP_PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
     private static ServiceFloating sSharedInstance;
-    private Handler softKeyBarHandler = new Handler();
-
+    /**
+     * Handler
+     */
+    private SoftKeyBarHandler softKeyBarHandler;
+    private boolean isDelay = false;
 
     /**
      * Config
@@ -101,6 +107,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         //init
         sSharedInstance = this;
         disappearObj = new DisappearObj(this);
+        softKeyBarHandler = new SoftKeyBarHandler(this);
         //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
         if (canDrawOverlays) {
@@ -190,7 +197,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     /**
      * Update config by mainActivity
      */
-
     public void updateTouchView(@Nullable Integer heightPx, @Nullable Integer widthPx, @Nullable Integer position) {
         //set config
         if (touchView != null) {
@@ -241,6 +247,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
+                    hiddenSoftKeyBar();
                     if (stylusOnlyMode) {
                         if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
                             touchViewTouchEvent(event);
@@ -248,7 +255,6 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     } else {
                         touchViewTouchEvent(event);
                     }
-                    hiddenSoftKeyBar();
                     return false;
                 }
 
@@ -260,7 +266,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                         case MotionEvent.ACTION_UP:
                             //Close the softKeyBar after swiping down more the 1/4 height
                             if ((event.getRawY() - firstSoftKeyTouchY) > (ScreenHepler.dpToPixel(getResources(), SOFTKEY_BAR_HEIGHT) / 4)) {
-                                softKeyBarHandler.post(softKeyBarRunnable);
+                                softKeyBarHandler.removeCallbacksAndMessages(null);
+                                isDelay = false;
+                                softKeyBarHandler.sendEmptyMessage(0);
                             }
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -301,19 +309,28 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
      */
 
     private void hiddenSoftKeyBar() {
-        if (disappearObj.getConfigTime() >= DisappearObj.TIME_NOW) {
-            softKeyBarHandler.postDelayed(softKeyBarRunnable, disappearObj.getConfigTime());
+        if (disappearObj.getConfigTime() >= DisappearObj.TIME_NOW && !isDelay) {
+            softKeyBarHandler.sendEmptyMessageDelayed(0, disappearObj.getConfigTime());
+            isDelay = true;
         }
     }
 
-    private Runnable softKeyBarRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (softKeyBar != null) {
-                softKeyBar.setVisibility(View.GONE);
-            }
+    private static class SoftKeyBarHandler extends Handler {
+
+        private WeakReference<ServiceFloating> mService;
+
+        public SoftKeyBarHandler(ServiceFloating aService) {
+            mService = new WeakReference<>(aService);
         }
-    };
+        @Override
+        public void handleMessage(Message msg) {
+            ServiceFloating theService = mService.get();
+            if (theService.softKeyBar != null) {
+                theService.softKeyBar.setVisibility(View.GONE);
+            }
+            theService.isDelay = false;
+        }
+    }
 
 
     /**
