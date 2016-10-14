@@ -36,6 +36,10 @@
     <string name="config_disappear_time_title">Disappear:</string>
     <string name="config_disappear_time_content">Time for disappearing Softkey bar</string>
 
+    <string name="setting_smart_hidden_title">Smart hidden(Experimental*):</string>
+    <string name="setting_smart_hidden_content">Auto hide the permanent Softkey bar when keyboard open\n(It\'s experimental function , close it if you have any problem)</string>
+    <string name="setting_smart_hidden_button">Smart hidden</string>
+
     <!--Description Dialog-->
     <string name="description_howtouse_title">How to use</string>
     <string name="description_howtouse_content">Swiping up in touch view for opening the Softkey bar,then swiping down can cancel</string>

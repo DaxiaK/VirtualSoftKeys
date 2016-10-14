@@ -1,6 +1,7 @@
 package tw.com.daxia.virtualsoftkeys.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -51,6 +53,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private DisappearObj disappearObj;
 
     private boolean stylusOnlyMode;
+    private boolean smartHidden;
     private boolean canDrawOverlays;
     private boolean isPortrait;
 
@@ -108,6 +111,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         sSharedInstance = this;
         disappearObj = new DisappearObj(this);
         softKeyBarHandler = new SoftKeyBarHandler(this);
+        stylusOnlyMode = SPFManager.getStylusOnlyMode(this);
+        updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
         if (canDrawOverlays) {
@@ -136,12 +141,32 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        //Do nothing
+        //Experimental features for smart hidden
+        try {
+            //Check the focused view is from Edittext object
+            Class<?> clazz = Class.forName(event.getClassName().toString());
+            if (EditText.class.isAssignableFrom(clazz) && disappearObj.getConfigTime() == DisappearObj.TIME_NEVER && softKeyBar != null) {
+                softKeyBar.setVisibility(View.GONE);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            //do nothing
+        }
     }
 
     @Override
     public void onInterrupt() {
         //Do nothing
+    }
+
+    private void updateServiceInfo(boolean allowTraceEvent) {
+        AccessibilityServiceInfo info = getServiceInfo();
+        if (allowTraceEvent) {
+            info.eventTypes = AccessibilityEvent.TYPE_VIEW_FOCUSED;
+        } else {
+            info.eventTypes = 0;
+        }
+        setServiceInfo(info);
     }
 
 
@@ -223,6 +248,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         this.disappearObj.updateConfigTime(spinnerPosition);
     }
 
+    public void updateSmartHidden(boolean smartHidden) {
+        updateServiceInfo(smartHidden);
+    }
 
     private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -322,6 +350,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         public SoftKeyBarHandler(ServiceFloating aService) {
             mService = new WeakReference<>(aService);
         }
+
         @Override
         public void handleMessage(Message msg) {
             ServiceFloating theService = mService.get();
