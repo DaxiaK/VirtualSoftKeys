@@ -215,6 +215,36 @@
                 android:background="@drawable/spinner_bg" />
 
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/setting_smart_hidden_title"
+                android:textColor="@android:color/black"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:text="@string/setting_smart_hidden_content"
+                android:textColor="#828282"
+                android:textSize="16sp" />
+
+
+            <CheckedTextView
+                android:id="@+id/CTV_smart_hidden"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="@string/setting_smart_hidden_button" />
+
+
             <ImageView
                 android:id="@+id/IV_my_github"
                 android:layout_width="wrap_content"
@@ -224,6 +254,8 @@
                 android:src="@drawable/ic_github_logo" />
 
         </LinearLayout>
+
+
     </ScrollView>
 
     <View

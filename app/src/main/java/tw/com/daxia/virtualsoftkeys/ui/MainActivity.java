@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static String MY_GIT_HUB_URL = "https://github.com/erttyy8821/VirtualSoftKeys";
     private final static int MAX_HEIGHT_PERCENTAGE = 20;
     private final static String descriptionDialogTAG = "descriptionDialog";
+    private final static String permissionDialogTAG = "permissionDialog";
 
     /**
      * UI
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area_height, Seek_touch_area_width;
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
-    private CheckedTextView CTV_stylus_only_mode;
+    private CheckedTextView CTV_stylus_only_mode, CTV_smart_hidden;
     private Spinner SP_bar_disappear_time;
 
     private View View_touchviewer;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         View_touchviewer = findViewById(R.id.View_touchviewer);
 
+        TV_config_name = (TextView) findViewById(R.id.TV_config_name);
+
         Seek_touch_area_height = (SeekBar) findViewById(R.id.Seek_touch_area_height);
         Seek_touch_area_height.setOnSeekBarChangeListener(touchviewHeightSeekBarListener);
         Seek_touch_area_height.setSaveEnabled(false);
@@ -73,10 +76,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Seek_touch_area_position.setOnSeekBarChangeListener(touchviewPositionSeekBarListener);
         Seek_touch_area_position.setSaveEnabled(false);
 
-        TV_config_name = (TextView) findViewById(R.id.TV_config_name);
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
-
         SP_bar_disappear_time = (Spinner) findViewById(R.id.SP_bar_disappear_time);
+        CTV_smart_hidden = (CheckedTextView) findViewById(R.id.CTV_smart_hidden);
 
         IV_my_github = (ImageView) findViewById(R.id.IV_my_github);
         IV_my_github.setOnClickListener(this);
@@ -87,8 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             isPortrait = false;
         }
         //Init shared setting
-        initStylusMode();
-        initSpinner();
+        initSharedConfig();
         //Init All Seekbar
         initSeekBar();
         //Show Description Dialog
@@ -101,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean drawOverlays = checkSystemAlertWindowPermission();
         boolean accessibility = isAccessibilitySettingsOn();
         if (!drawOverlays || !accessibility) {
+            clearOldDialogFragment(permissionDialogTAG);
             PermissionDialog permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
-            permissionDialog.show(this.getSupportFragmentManager(), "permissionDialog");
+            permissionDialog.show(this.getSupportFragmentManager(), permissionDialogTAG);
         }
     }
 
@@ -118,21 +120,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showDescription() {
         if (!SPFManager.getDescriptionClose(this)) {
-            FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-            Fragment prev = getSupportFragmentManager().findFragmentByTag(descriptionDialogTAG);
-            if (prev != null) {
-                DialogFragment df = (DialogFragment) prev;
-                df.dismiss();
-                ft.remove(prev);
-            }
-            ft.addToBackStack(null);
-
+            clearOldDialogFragment(descriptionDialogTAG);
             DescriptionDialog descriptionDialog = new DescriptionDialog();
             descriptionDialog.show(this.getSupportFragmentManager(), descriptionDialogTAG);
         }
     }
 
-    private void initSpinner() {
+    private void initSharedConfig() {
+        //StylusMode
+        CTV_stylus_only_mode.setChecked(SPFManager.getStylusOnlyMode(this));
+        CTV_stylus_only_mode.setOnClickListener(this);
+        //Disappear time
+        initDisappearSpinner();
+        //smart hieedn
+        CTV_smart_hidden.setChecked(SPFManager.getSmartHidden(this));
+        CTV_smart_hidden.setOnClickListener(this);
+    }
+
+    private void initDisappearSpinner() {
         ArrayAdapter disappearAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.bar_disappear_time));
         SP_bar_disappear_time.setAdapter(disappearAdapter);
@@ -149,14 +154,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-            //Do nothing
+                //Do nothing
             }
         });
-    }
-
-    private void initStylusMode() {
-        CTV_stylus_only_mode.setChecked(SPFManager.getStylusOnlyMode(this));
-        CTV_stylus_only_mode.setOnClickListener(this);
     }
 
     private void initSeekBar() {
@@ -350,6 +350,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+    private void clearOldDialogFragment(String Tag){
+        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(Tag);
+        if (prev != null) {
+            DialogFragment df = (DialogFragment) prev;
+            df.dismiss();
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+    }
+
 
     private boolean checkSystemAlertWindowPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -387,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.CTV_stylus_only_mode:
+            case R.id.CTV_stylus_only_mode: {
                 CTV_stylus_only_mode.toggle();
                 SPFManager.setStylusOnlyMode(this, CTV_stylus_only_mode.isChecked());
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
@@ -396,10 +407,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mAccessibilityService = null;
                 }
                 break;
-            case R.id.IV_my_github:
+            }
+            case R.id.CTV_smart_hidden: {
+                CTV_smart_hidden.toggle();
+                SPFManager.setSmartHidden(this, CTV_smart_hidden.isChecked());
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateSmartHidden(CTV_smart_hidden.isChecked());
+                    mAccessibilityService = null;
+                }
+                break;
+            }
+            case R.id.IV_my_github: {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MY_GIT_HUB_URL));
                 startActivity(browserIntent);
                 break;
+            }
         }
     }
 }

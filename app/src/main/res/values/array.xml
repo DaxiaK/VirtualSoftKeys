@@ -2,7 +2,7 @@
 <resources>
 
     <array name="bar_disappear_time">
-        <item>Never</item>
+        <item>Permanent</item>
         <item>Now</item>
         <item>1s</item>
         <item>3s</item>
