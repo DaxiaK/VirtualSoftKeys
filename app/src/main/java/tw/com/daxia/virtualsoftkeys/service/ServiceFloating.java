@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -56,7 +55,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private boolean stylusOnlyMode;
     private boolean canDrawOverlays;
     private boolean isPortrait;
-    private boolean hiddenWhenRotate;
+    private boolean rotateHidden;
 
     /**
      * View
@@ -98,11 +97,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             updateTouchView(SPFManager.getTouchviewLandscapeHeight(this), SPFManager.getTouchviewLandscapeWidth(this),
                     SPFManager.getTouchviewLandscapePosition(this));
         }
-        if (hiddenWhenRotate) {
-            Log.e("test","run");
-            softKeyBarHandler.removeCallbacksAndMessages(null);
-            isDelay = false;
-            softKeyBarHandler.sendEmptyMessage(0);
+        if (rotateHidden) {
+            hiddenSoftKeyBar(true);
         }
     }
 
@@ -119,7 +115,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         disappearObj = new DisappearObj(this);
         softKeyBarHandler = new SoftKeyBarHandler(this);
         stylusOnlyMode = SPFManager.getStylusOnlyMode(this);
-        hiddenWhenRotate = SPFManager.getHiddenWhenRotate(this);
+        rotateHidden = SPFManager.getRotateHidden(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
@@ -260,8 +256,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         updateServiceInfo(smartHidden);
     }
 
-    public void updateHiddenWhenRotate(boolean hiddenWhenRotate) {
-        this.hiddenWhenRotate = hiddenWhenRotate;
+    public void updateRotateHidden(boolean rotateHidden) {
+        this.rotateHidden = rotateHidden;
     }
 
     private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
@@ -287,7 +283,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    hiddenSoftKeyBar();
+                    hiddenSoftKeyBar(false);
                     if (stylusOnlyMode) {
                         if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
                             touchViewTouchEvent(event);
@@ -306,9 +302,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                         case MotionEvent.ACTION_UP:
                             //Close the softKeyBar after swiping down more the 1/4 height
                             if ((event.getRawY() - firstSoftKeyTouchY) > (ScreenHepler.dpToPixel(getResources(), SOFTKEY_BAR_HEIGHT) / 4)) {
-                                softKeyBarHandler.removeCallbacksAndMessages(null);
-                                isDelay = false;
-                                softKeyBarHandler.sendEmptyMessage(0);
+                                hiddenSoftKeyBar(true);
                             }
                             break;
                         case MotionEvent.ACTION_MOVE:
@@ -348,10 +342,16 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
      * Handler + Runnable
      */
 
-    private void hiddenSoftKeyBar() {
-        if (disappearObj.getConfigTime() >= DisappearObj.TIME_NOW && !isDelay) {
-            softKeyBarHandler.sendEmptyMessageDelayed(0, disappearObj.getConfigTime());
-            isDelay = true;
+    private void hiddenSoftKeyBar(boolean now) {
+        if (now) {
+            softKeyBarHandler.removeCallbacksAndMessages(null);
+            isDelay = false;
+            softKeyBarHandler.sendEmptyMessage(0);
+        } else {
+            if (disappearObj.getConfigTime() >= DisappearObj.TIME_NOW && !isDelay) {
+                softKeyBarHandler.sendEmptyMessageDelayed(0, disappearObj.getConfigTime());
+                isDelay = true;
+            }
         }
     }
 
@@ -393,7 +393,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
                 break;
         }
-        hiddenSoftKeyBar();
+        hiddenSoftKeyBar(false);
     }
 
     @Override

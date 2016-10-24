@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CTV_smart_hidden.setChecked(SPFManager.getSmartHidden(this));
         CTV_smart_hidden.setOnClickListener(this);
         //hidden when rotate
-        CTV_hidden_when_rotate.setChecked(SPFManager.getHiddenWhenRotate(this));
+        CTV_hidden_when_rotate.setChecked(SPFManager.getRotateHidden(this));
         CTV_hidden_when_rotate.setOnClickListener(this);
     }
 
@@ -424,10 +424,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.CTV_hidden_when_rotate: {
                 CTV_hidden_when_rotate.toggle();
-                SPFManager.setHiddenWhenRotate(this, CTV_hidden_when_rotate.isChecked());
+                SPFManager.setRotateHidden(this, CTV_hidden_when_rotate.isChecked());
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
-                    mAccessibilityService.updateHiddenWhenRotate(CTV_hidden_when_rotate.isChecked());
+                    mAccessibilityService.updateRotateHidden(CTV_hidden_when_rotate.isChecked());
                     mAccessibilityService = null;
                 }
                 break;

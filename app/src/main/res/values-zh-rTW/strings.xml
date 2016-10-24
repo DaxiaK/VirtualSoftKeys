@@ -39,6 +39,10 @@
     <string name="setting_smart_hidden_content">鍵盤打開時自動隱藏常駐的Softkey bar\n(此功能實驗中，如有錯誤請關閉此功能)</string>
     <string name="setting_smart_hidden_button">智慧隱藏</string>
 
+    <string name="setting_rotate_hidden_title">旋轉隱藏:</string>
+    <string name="setting_rotate_hidden_content">在螢幕方向改變後自動隱藏Softkey bar</string>
+    <string name="setting_rotate_hidden_button">旋轉隱藏</string>
+
     <!--Description Dialog-->
     <string name="description_howtouse_title">如何使用</string>
     <string name="description_howtouse_content">在設定好的觸碰區域內向上滑動即可打開Softkey Bar，再向下滑可以取消顯示</string>
