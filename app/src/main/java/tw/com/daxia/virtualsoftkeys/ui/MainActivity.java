@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area_height, Seek_touch_area_width;
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
-    private CheckedTextView CTV_stylus_only_mode, CTV_smart_hidden;
+    private CheckedTextView CTV_stylus_only_mode, CTV_smart_hidden,CTV_hidden_when_rotate;
     private Spinner SP_bar_disappear_time;
 
     private View View_touchviewer;
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
         SP_bar_disappear_time = (Spinner) findViewById(R.id.SP_bar_disappear_time);
         CTV_smart_hidden = (CheckedTextView) findViewById(R.id.CTV_smart_hidden);
+        CTV_hidden_when_rotate = (CheckedTextView) findViewById(R.id.CTV_hidden_when_rotate);
 
         IV_my_github = (ImageView) findViewById(R.id.IV_my_github);
         IV_my_github.setOnClickListener(this);
@@ -135,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //smart hieedn
         CTV_smart_hidden.setChecked(SPFManager.getSmartHidden(this));
         CTV_smart_hidden.setOnClickListener(this);
+        //hidden when rotate
+        CTV_hidden_when_rotate.setChecked(SPFManager.getRotateHidden(this));
+        CTV_hidden_when_rotate.setOnClickListener(this);
     }
 
     private void initDisappearSpinner() {
@@ -414,6 +418,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
                     mAccessibilityService.updateSmartHidden(CTV_smart_hidden.isChecked());
+                    mAccessibilityService = null;
+                }
+                break;
+            }
+            case R.id.CTV_hidden_when_rotate: {
+                CTV_hidden_when_rotate.toggle();
+                SPFManager.setRotateHidden(this, CTV_hidden_when_rotate.isChecked());
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateRotateHidden(CTV_hidden_when_rotate.isChecked());
                     mAccessibilityService = null;
                 }
                 break;

@@ -25,6 +25,7 @@ public class SPFManager {
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
     private static final String CONFIG_DISAPPEAR_TIME = "DISAPPEAR_TIME";
     private static final String CONFIG_SMART_HIDDEN = "SMART_HIDDEN";
+    private static final String CONFIG_ROTATE_HIDDEN = "ROTATE_HIDDEN";
 
     //Description
     private static final String DESCRIPTION_CLOSE = "DESCRIPTION_CLOSE";
@@ -171,6 +172,18 @@ public class SPFManager {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
         PE.putBoolean(CONFIG_SMART_HIDDEN, smartHidden);
+        PE.commit();
+    }
+
+  public static boolean getRotateHidden(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getBoolean(CONFIG_ROTATE_HIDDEN, false);
+    }
+
+    public static void setRotateHidden(Context context, boolean hiddenWhenRotate) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putBoolean(CONFIG_ROTATE_HIDDEN, hiddenWhenRotate);
         PE.commit();
     }
 
