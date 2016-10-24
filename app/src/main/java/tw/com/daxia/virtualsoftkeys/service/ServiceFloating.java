@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -53,9 +54,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private DisappearObj disappearObj;
 
     private boolean stylusOnlyMode;
-    private boolean smartHidden;
     private boolean canDrawOverlays;
     private boolean isPortrait;
+    private boolean hiddenWhenRotate;
 
     /**
      * View
@@ -97,6 +98,12 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             updateTouchView(SPFManager.getTouchviewLandscapeHeight(this), SPFManager.getTouchviewLandscapeWidth(this),
                     SPFManager.getTouchviewLandscapePosition(this));
         }
+        if (hiddenWhenRotate) {
+            Log.e("test","run");
+            softKeyBarHandler.removeCallbacksAndMessages(null);
+            isDelay = false;
+            softKeyBarHandler.sendEmptyMessage(0);
+        }
     }
 
     @Override
@@ -112,6 +119,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         disappearObj = new DisappearObj(this);
         softKeyBarHandler = new SoftKeyBarHandler(this);
         stylusOnlyMode = SPFManager.getStylusOnlyMode(this);
+        hiddenWhenRotate = SPFManager.getHiddenWhenRotate(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
@@ -250,6 +258,10 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     public void updateSmartHidden(boolean smartHidden) {
         updateServiceInfo(smartHidden);
+    }
+
+    public void updateHiddenWhenRotate(boolean hiddenWhenRotate) {
+        this.hiddenWhenRotate = hiddenWhenRotate;
     }
 
     private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
