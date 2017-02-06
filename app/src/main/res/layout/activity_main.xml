@@ -221,6 +221,35 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp"
+                android:text="Transparent background"
+                android:textColor="@android:color/black"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:text="To set Background is transparent or not."
+                android:textColor="#828282"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/CTV_transparent_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="Transparent background" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/setting_smart_hidden_title"
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
@@ -243,7 +272,6 @@
                 android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
                 android:gravity="center"
                 android:text="@string/setting_smart_hidden_button" />
-
 
 
             <LinearLayout

@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area_height, Seek_touch_area_width;
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
-    private CheckedTextView CTV_stylus_only_mode, CTV_smart_hidden, CTV_hidden_when_rotate;
+    private CheckedTextView CTV_stylus_only_mode,
+            CTV_transparent_bg,
+            CTV_smart_hidden, CTV_hidden_when_rotate;
     private Spinner SP_bar_disappear_time;
 
     private View View_touchviewer;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
         SP_bar_disappear_time = (Spinner) findViewById(R.id.SP_bar_disappear_time);
+        CTV_transparent_bg = (CheckedTextView) findViewById(R.id.CTV_transparent_bg);
         CTV_smart_hidden = (CheckedTextView) findViewById(R.id.CTV_smart_hidden);
         CTV_hidden_when_rotate = (CheckedTextView) findViewById(R.id.CTV_hidden_when_rotate);
 
@@ -133,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CTV_stylus_only_mode.setOnClickListener(this);
         //Disappear time
         initDisappearSpinner();
+        //transparent_bg
+        CTV_transparent_bg.setOnClickListener(this);
         //smart hieedn
         CTV_smart_hidden.setChecked(SPFManager.getSmartHidden(this));
         CTV_smart_hidden.setOnClickListener(this);
@@ -408,6 +413,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
                     mAccessibilityService.updateStylusOnlyMode(CTV_stylus_only_mode.isChecked());
+                    mAccessibilityService = null;
+                }
+                break;
+            }
+            case R.id.CTV_transparent_bg: {
+                CTV_transparent_bg.toggle();
+                SPFManager.setTransparentBg(this, CTV_transparent_bg.isChecked());
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateNavigationBarBg(CTV_transparent_bg.isChecked());
                     mAccessibilityService = null;
                 }
                 break;

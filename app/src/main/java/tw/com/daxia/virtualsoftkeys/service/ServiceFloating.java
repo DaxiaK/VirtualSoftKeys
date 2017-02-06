@@ -244,6 +244,16 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         }
     }
 
+    public void updateNavigationBarBg(boolean isTransparent) {
+        if (softKeyBar != null) {
+            if (isTransparent) {
+                softKeyBar.setBackgroundColor(Color.TRANSPARENT);
+            } else {
+                softKeyBar.setBackgroundColor(Color.BLACK);
+            }
+        }
+    }
+
     public void updateStylusOnlyMode(boolean stylusOnly) {
         this.stylusOnlyMode = stylusOnly;
     }
@@ -332,10 +342,10 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             params.x = 0;
             params.y = 0;
             windowManager.addView(softKeyBar, params);
+            updateNavigationBarBg(SPFManager.getTransparentBg(this));
         } else {
             softKeyBar.setVisibility(View.VISIBLE);
         }
-
     }
 
     /**
