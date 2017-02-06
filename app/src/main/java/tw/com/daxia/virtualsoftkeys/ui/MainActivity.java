@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area_height, Seek_touch_area_width;
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
-    private CheckedTextView CTV_stylus_only_mode, CTV_smart_hidden,CTV_hidden_when_rotate;
+    private CheckedTextView CTV_stylus_only_mode, CTV_smart_hidden, CTV_hidden_when_rotate;
     private Spinner SP_bar_disappear_time;
 
     private View View_touchviewer;
@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private void clearOldDialogFragment(String Tag){
+    private void clearOldDialogFragment(String Tag) {
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(Tag);
         if (prev != null) {
@@ -433,8 +433,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.IV_my_github: {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MY_GIT_HUB_URL));
-                startActivity(browserIntent);
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MY_GIT_HUB_URL));
+                    startActivity(browserIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             }
         }
