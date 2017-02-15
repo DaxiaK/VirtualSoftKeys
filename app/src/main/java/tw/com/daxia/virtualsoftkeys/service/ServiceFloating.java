@@ -332,11 +332,13 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             //Init all button
             IB_button_left = (ImageButton) softKeyBar.findViewById(R.id.IB_button_left);
             IB_button_left.setOnClickListener(this);
+            IB_button_left.setOnLongClickListener(this);
             IB_button_home = (ImageButton) softKeyBar.findViewById(R.id.IB_button_home);
             IB_button_home.setOnClickListener(this);
             IB_button_home.setOnLongClickListener(this);
             IB_button_right = (ImageButton) softKeyBar.findViewById(R.id.IB_button_right);
             IB_button_right.setOnClickListener(this);
+            IB_button_right.setOnLongClickListener(this);
             setIBButtonGUI();
             final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
@@ -438,6 +440,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.IB_button_left:
+                if (reverseButton) {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+                }
                 break;
             case R.id.IB_button_home:
                 Intent intent = getPackageManager().getLaunchIntentForPackage(GOOGLE_APP_PACKAGE_NAME);
@@ -455,6 +460,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                 }
                 break;
             case R.id.IB_button_right:
+                if (!reverseButton) {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+                }
                 break;
         }
 
