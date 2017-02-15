@@ -35,6 +35,14 @@
     <string name="config_disappear_time_title">消失時間:</string>
     <string name="config_disappear_time_content">Softkey bar消失的時間</string>
 
+    <string name="setting_reverse_button_title">反轉按鈕位置:</string>
+    <string name="setting_reverse_button_content">交換返回跟總覽按鈕的的位置</string>
+    <string name="setting_reverse_button_button">反轉</string>
+
+    <string name="setting_transparent_bg_title">透明背景:</string>
+    <string name="setting_transparent_bg_content">將Softkey bar的背景設為透明</string>
+    <string name="setting_transparent_bg_button">透明背景</string>
+
     <string name="setting_smart_hidden_title">智慧隱藏(實驗*):</string>
     <string name="setting_smart_hidden_content">鍵盤打開時自動隱藏常駐的Softkey bar\n(此功能實驗中，如有錯誤請關閉此功能)</string>
     <string name="setting_smart_hidden_button">智慧隱藏</string>

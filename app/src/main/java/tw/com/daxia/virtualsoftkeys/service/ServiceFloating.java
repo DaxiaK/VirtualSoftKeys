@@ -56,6 +56,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private boolean canDrawOverlays;
     private boolean isPortrait;
     private boolean rotateHidden;
+    private boolean reverseButton;
 
     /**
      * View
@@ -63,6 +64,8 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     private WindowManager windowManager;
     private View softKeyBar;
     private View touchView;
+    //SoftKeyview
+    private ImageButton IB_button_home, IB_button_left, IB_button_right;
 
     public static ServiceFloating getSharedInstance() {
         return sSharedInstance;
@@ -116,6 +119,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         softKeyBarHandler = new SoftKeyBarHandler(this);
         stylusOnlyMode = SPFManager.getStylusOnlyMode(this);
         rotateHidden = SPFManager.getRotateHidden(this);
+        reverseButton = SPFManager.getReverseButton(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
@@ -244,6 +248,16 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         }
     }
 
+    public void updateNavigationBarBg(boolean isTransparent) {
+        if (softKeyBar != null) {
+            if (isTransparent) {
+                softKeyBar.setBackgroundColor(Color.TRANSPARENT);
+            } else {
+                softKeyBar.setBackgroundColor(Color.BLACK);
+            }
+        }
+    }
+
     public void updateStylusOnlyMode(boolean stylusOnly) {
         this.stylusOnlyMode = stylusOnly;
     }
@@ -258,6 +272,11 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
     public void updateRotateHidden(boolean rotateHidden) {
         this.rotateHidden = rotateHidden;
+    }
+
+    public void updateReverseButton(boolean reverseButton) {
+        this.reverseButton = reverseButton;
+        setIBButtonGUI();
     }
 
     private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
@@ -311,16 +330,14 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                 }
             });
             //Init all button
-            ImageButton IB_button_home, IB_button_back, IB_button_recents;
-            IB_button_back = (ImageButton) softKeyBar.findViewById(R.id.IB_button_back);
-            IB_button_back.setOnClickListener(this);
-            IB_button_back.setOnLongClickListener(this);
+            IB_button_left = (ImageButton) softKeyBar.findViewById(R.id.IB_button_left);
+            IB_button_left.setOnClickListener(this);
             IB_button_home = (ImageButton) softKeyBar.findViewById(R.id.IB_button_home);
             IB_button_home.setOnClickListener(this);
             IB_button_home.setOnLongClickListener(this);
-            IB_button_recents = (ImageButton) softKeyBar.findViewById(R.id.IB_button_recents);
-            IB_button_recents.setOnClickListener(this);
-            IB_button_recents.setOnLongClickListener(this);
+            IB_button_right = (ImageButton) softKeyBar.findViewById(R.id.IB_button_right);
+            IB_button_right.setOnClickListener(this);
+            setIBButtonGUI();
             final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     ScreenHepler.dpToPixel(getResources(), SOFTKEY_BAR_HEIGHT),
@@ -332,8 +349,21 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             params.x = 0;
             params.y = 0;
             windowManager.addView(softKeyBar, params);
+            updateNavigationBarBg(SPFManager.getTransparentBg(this));
         } else {
             softKeyBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setIBButtonGUI() {
+        if (softKeyBar != null) {
+            if (reverseButton) {
+                IB_button_left.setImageResource(R.drawable.ic_sysbar_overview);
+                IB_button_right.setImageResource(R.drawable.ic_sysbar_back);
+            } else {
+                IB_button_left.setImageResource(R.drawable.ic_sysbar_back);
+                IB_button_right.setImageResource(R.drawable.ic_sysbar_overview);
+            }
         }
 
     }
@@ -383,14 +413,22 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         //Add HapticFeedback
         v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         switch (v.getId()) {
-            case R.id.IB_button_back:
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+            case R.id.IB_button_left:
+                if (reverseButton) {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
+                } else {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                }
                 break;
             case R.id.IB_button_home:
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
                 break;
-            case R.id.IB_button_recents:
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
+            case R.id.IB_button_right:
+                if (reverseButton) {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                } else {
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
+                }
                 break;
         }
         hiddenSoftKeyBar(false);
@@ -399,7 +437,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()) {
-            case R.id.IB_button_back:
+            case R.id.IB_button_left:
                 break;
             case R.id.IB_button_home:
                 Intent intent = getPackageManager().getLaunchIntentForPackage(GOOGLE_APP_PACKAGE_NAME);
@@ -416,7 +454,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     startActivity(intent);
                 }
                 break;
-            case R.id.IB_button_recents:
+            case R.id.IB_button_right:
                 break;
         }
 

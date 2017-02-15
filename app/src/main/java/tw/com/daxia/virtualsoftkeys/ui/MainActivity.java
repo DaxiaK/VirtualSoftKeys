@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area_height, Seek_touch_area_width;
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
-    private CheckedTextView CTV_stylus_only_mode, CTV_smart_hidden,CTV_hidden_when_rotate;
+    private CheckedTextView CTV_stylus_only_mode,
+            CTV_reverse_button,CTV_transparent_bg,
+            CTV_smart_hidden, CTV_hidden_when_rotate;
     private Spinner SP_bar_disappear_time;
 
     private View View_touchviewer;
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
         SP_bar_disappear_time = (Spinner) findViewById(R.id.SP_bar_disappear_time);
+        CTV_transparent_bg = (CheckedTextView) findViewById(R.id.CTV_transparent_bg);
+        CTV_reverse_button = (CheckedTextView) findViewById(R.id.CTV_reverse_button);
         CTV_smart_hidden = (CheckedTextView) findViewById(R.id.CTV_smart_hidden);
         CTV_hidden_when_rotate = (CheckedTextView) findViewById(R.id.CTV_hidden_when_rotate);
 
@@ -133,6 +137,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CTV_stylus_only_mode.setOnClickListener(this);
         //Disappear time
         initDisappearSpinner();
+        //Reverse button position
+        CTV_reverse_button.setChecked(SPFManager.getReverseButton(this));
+        CTV_reverse_button.setOnClickListener(this);
+        //make bar bg be transparent
+        CTV_transparent_bg.setChecked(SPFManager.getTransparentBg(this));
+        CTV_transparent_bg.setOnClickListener(this);
         //smart hieedn
         CTV_smart_hidden.setChecked(SPFManager.getSmartHidden(this));
         CTV_smart_hidden.setOnClickListener(this);
@@ -354,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private void clearOldDialogFragment(String Tag){
+    private void clearOldDialogFragment(String Tag) {
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(Tag);
         if (prev != null) {
@@ -412,6 +422,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             }
+            case R.id.CTV_reverse_button: {
+                CTV_reverse_button.toggle();
+                SPFManager.setReverseButton(this, CTV_reverse_button.isChecked());
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateReverseButton(CTV_reverse_button.isChecked());
+                    mAccessibilityService = null;
+                }
+                break;
+            } case R.id.CTV_transparent_bg: {
+                CTV_transparent_bg.toggle();
+                SPFManager.setTransparentBg(this, CTV_transparent_bg.isChecked());
+                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+                if (mAccessibilityService != null) {
+                    mAccessibilityService.updateNavigationBarBg(CTV_transparent_bg.isChecked());
+                    mAccessibilityService = null;
+                }
+                break;
+            }
             case R.id.CTV_smart_hidden: {
                 CTV_smart_hidden.toggle();
                 SPFManager.setSmartHidden(this, CTV_smart_hidden.isChecked());
@@ -433,8 +462,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.IV_my_github: {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MY_GIT_HUB_URL));
-                startActivity(browserIntent);
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MY_GIT_HUB_URL));
+                    startActivity(browserIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             }
         }

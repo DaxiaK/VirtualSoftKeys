@@ -17,21 +17,19 @@
         android:src="@drawable/ic_sysbar_home" />
 
     <ImageButton
-        android:id="@+id/IB_button_back"
+        android:id="@+id/IB_button_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/IB_button_home"
-        android:background="@drawable/ic_sys_background"
-        android:src="@drawable/ic_sysbar_back" />
+        android:background="@drawable/ic_sys_background" />
 
     <ImageButton
-        android:id="@+id/IB_button_recents"
+        android:id="@+id/IB_button_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/IB_button_home"
-        android:background="@drawable/ic_sys_background"
-        android:src="@drawable/ic_sysbar_recent" />
+        android:background="@drawable/ic_sys_background" />
 
 </RelativeLayout>

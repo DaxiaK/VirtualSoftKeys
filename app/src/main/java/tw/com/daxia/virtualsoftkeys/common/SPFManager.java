@@ -23,9 +23,13 @@ public class SPFManager {
 
     //Shared config
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
+    private static final String CONFIG_TRANSPARENT_BG = "TRANSPARENT_BG";
+
     private static final String CONFIG_DISAPPEAR_TIME = "DISAPPEAR_TIME";
     private static final String CONFIG_SMART_HIDDEN = "SMART_HIDDEN";
     private static final String CONFIG_ROTATE_HIDDEN = "ROTATE_HIDDEN";
+    private static final String CONFIG_REVERSE_BUTTON = "REVERSE_BUTTON";
+
 
     //Description
     private static final String DESCRIPTION_CLOSE = "DESCRIPTION_CLOSE";
@@ -127,6 +131,18 @@ public class SPFManager {
      * Shared Setting Method
      */
 
+    public static boolean getTransparentBg(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getBoolean(CONFIG_TRANSPARENT_BG, false);
+    }
+
+    public static void setTransparentBg(Context context, boolean transparent) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putBoolean(CONFIG_TRANSPARENT_BG, transparent);
+        PE.commit();
+    }
+
     public static boolean getStylusOnlyMode(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         return settings.getBoolean(CONFIG_STYLUS_ONLY_MODE, false);
@@ -138,6 +154,8 @@ public class SPFManager {
         PE.putBoolean(CONFIG_STYLUS_ONLY_MODE, stylusOnly);
         PE.commit();
     }
+
+
 
     /**
      * Get the disappear time array position
@@ -186,6 +204,19 @@ public class SPFManager {
         PE.putBoolean(CONFIG_ROTATE_HIDDEN, hiddenWhenRotate);
         PE.commit();
     }
+
+    public static boolean getReverseButton(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getBoolean(CONFIG_REVERSE_BUTTON, false);
+    }
+
+    public static void setReverseButton(Context context, boolean reverseButton) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putBoolean(CONFIG_REVERSE_BUTTON, reverseButton);
+        PE.commit();
+    }
+
 
 
     /**
