@@ -138,8 +138,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Disappear time
         initDisappearSpinner();
         //Reverse button position
+        CTV_reverse_button.setChecked(SPFManager.getReverseButton(this));
         CTV_reverse_button.setOnClickListener(this);
         //make bar bg be transparent
+        CTV_transparent_bg.setChecked(SPFManager.getTransparentBg(this));
         CTV_transparent_bg.setOnClickListener(this);
         //smart hieedn
         CTV_smart_hidden.setChecked(SPFManager.getSmartHidden(this));
