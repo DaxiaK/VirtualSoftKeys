@@ -28,6 +28,8 @@ public class SPFManager {
     private static final String CONFIG_DISAPPEAR_TIME = "DISAPPEAR_TIME";
     private static final String CONFIG_SMART_HIDDEN = "SMART_HIDDEN";
     private static final String CONFIG_ROTATE_HIDDEN = "ROTATE_HIDDEN";
+    private static final String CONFIG_REVERSE_BUTTON = "REVERSE_BUTTON";
+
 
     //Description
     private static final String DESCRIPTION_CLOSE = "DESCRIPTION_CLOSE";
@@ -202,6 +204,19 @@ public class SPFManager {
         PE.putBoolean(CONFIG_ROTATE_HIDDEN, hiddenWhenRotate);
         PE.commit();
     }
+
+    public static boolean getReverseButton(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getBoolean(CONFIG_REVERSE_BUTTON, false);
+    }
+
+    public static void setReverseButton(Context context, boolean reverseButton) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putBoolean(CONFIG_REVERSE_BUTTON, reverseButton);
+        PE.commit();
+    }
+
 
 
     /**

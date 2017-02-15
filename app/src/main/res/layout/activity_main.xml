@@ -221,7 +221,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp"
-                android:text="Transparent background"
+                android:text="@string/setting_reverse_button_title"
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
 
@@ -230,7 +230,35 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
-                android:text="To set Background is transparent or not."
+                android:text="@string/setting_reverse_button_content"
+                android:textColor="#828282"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/CTV_reverse_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="@string/setting_reverse_button_button" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/setting_transparent_bg_title"
+                android:textColor="@android:color/black"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:text="@string/setting_transparent_bg_content"
                 android:textColor="#828282"
                 android:textSize="16sp" />
 
@@ -241,7 +269,7 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
                 android:gravity="center"
-                android:text="Transparent background" />
+                android:text="@string/setting_transparent_bg_button" />
 
 
             <TextView
