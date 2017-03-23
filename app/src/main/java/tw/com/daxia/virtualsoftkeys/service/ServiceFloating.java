@@ -248,13 +248,9 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         }
     }
 
-    public void updateNavigationBarBg(boolean isTransparent) {
+    public void updateSoftKeyBarBg(int bgColor) {
         if (softKeyBar != null) {
-            if (isTransparent) {
-                softKeyBar.setBackgroundColor(Color.TRANSPARENT);
-            } else {
-                softKeyBar.setBackgroundColor(Color.BLACK);
-            }
+                softKeyBar.setBackgroundColor(bgColor);
         }
     }
 
@@ -351,7 +347,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             params.x = 0;
             params.y = 0;
             windowManager.addView(softKeyBar, params);
-            updateNavigationBarBg(SPFManager.getTransparentBg(this));
+            updateSoftKeyBarBg(SPFManager.getSoftKeyBarBgGolor(this));
         } else {
             softKeyBar.setVisibility(View.VISIBLE);
         }
@@ -455,7 +451,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
                     // Bring user to the market or let them choose an app?
                     intent = new Intent(Intent.ACTION_VIEW);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    intent.setData(Uri.parse("market://details?id=" + GOOGLE_APP_PACKAGE_NAME));
+                    intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + GOOGLE_APP_PACKAGE_NAME));
                     startActivity(intent);
                 }
                 break;

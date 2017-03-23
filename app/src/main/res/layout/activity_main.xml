@@ -249,7 +249,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/setting_transparent_bg_title"
+                android:text="@string/setting_softkey_bg_title"
                 android:textColor="@android:color/black"
                 android:textSize="22sp" />
 
@@ -258,19 +258,23 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
-                android:text="@string/setting_transparent_bg_content"
+                android:text="@string/setting_softkey_bg_content"
                 android:textColor="#828282"
                 android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/CTV_transparent_bg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="@string/setting_transparent_bg_button" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/softkey_bar_bg_board">
+
+                <ImageView
+                    android:id="@+id/IV_bg_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"

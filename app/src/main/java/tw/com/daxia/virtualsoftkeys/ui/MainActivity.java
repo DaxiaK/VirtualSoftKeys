@@ -3,6 +3,7 @@ package tw.com.daxia.virtualsoftkeys.ui;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +31,8 @@ import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        ColorPickerFragment.colorPickerCallback {
 
 
     private final static String TAG = "MainActivity";
@@ -46,12 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
     private CheckedTextView CTV_stylus_only_mode,
-            CTV_reverse_button,CTV_transparent_bg,
+            CTV_reverse_button,
             CTV_smart_hidden, CTV_hidden_when_rotate;
     private Spinner SP_bar_disappear_time;
 
     private View View_touchviewer;
-    private ImageView IV_my_github;
+    private ImageView IV_bg_color, IV_my_github;
     /**
      * Config
      */
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
         SP_bar_disappear_time = (Spinner) findViewById(R.id.SP_bar_disappear_time);
-        CTV_transparent_bg = (CheckedTextView) findViewById(R.id.CTV_transparent_bg);
+        IV_bg_color = (ImageView) findViewById(R.id.IV_bg_color);
         CTV_reverse_button = (CheckedTextView) findViewById(R.id.CTV_reverse_button);
         CTV_smart_hidden = (CheckedTextView) findViewById(R.id.CTV_smart_hidden);
         CTV_hidden_when_rotate = (CheckedTextView) findViewById(R.id.CTV_hidden_when_rotate);
@@ -103,7 +105,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onResume() {
+        Log.e("test","onResume");
         super.onResume();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        Log.e("test","onResumeFragments");
+        super.onResumeFragments();
         boolean drawOverlays = checkSystemAlertWindowPermission();
         boolean accessibility = isAccessibilitySettingsOn();
         if (!drawOverlays || !accessibility) {
@@ -141,8 +150,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CTV_reverse_button.setChecked(SPFManager.getReverseButton(this));
         CTV_reverse_button.setOnClickListener(this);
         //make bar bg be transparent
-        CTV_transparent_bg.setChecked(SPFManager.getTransparentBg(this));
-        CTV_transparent_bg.setOnClickListener(this);
+        IV_bg_color.setImageDrawable(new ColorDrawable(SPFManager.getSoftKeyBarBgGolor(this)));
+        IV_bg_color.setOnClickListener(this);
         //smart hieedn
         CTV_smart_hidden.setChecked(SPFManager.getSmartHidden(this));
         CTV_smart_hidden.setOnClickListener(this);
@@ -431,14 +440,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mAccessibilityService = null;
                 }
                 break;
-            } case R.id.CTV_transparent_bg: {
-                CTV_transparent_bg.toggle();
-                SPFManager.setTransparentBg(this, CTV_transparent_bg.isChecked());
-                ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
-                if (mAccessibilityService != null) {
-                    mAccessibilityService.updateNavigationBarBg(CTV_transparent_bg.isChecked());
-                    mAccessibilityService = null;
-                }
+            }
+            case R.id.IV_bg_color: {
+                ColorPickerFragment secColorPickerFragment =
+                        ColorPickerFragment.newInstance(SPFManager.getSoftKeyBarBgGolor(this));
+                secColorPickerFragment.show(getSupportFragmentManager(), "ColorPickerFragment");
                 break;
             }
             case R.id.CTV_smart_hidden: {
@@ -470,6 +476,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onColorChange(int colorCode) {
+        IV_bg_color.setImageDrawable(new ColorDrawable(colorCode));
+        SPFManager.setSoftKeyBgGolor(this, colorCode);
+        ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+        if (mAccessibilityService != null) {
+            mAccessibilityService.updateSoftKeyBarBg(colorCode);
+            mAccessibilityService = null;
         }
     }
 }

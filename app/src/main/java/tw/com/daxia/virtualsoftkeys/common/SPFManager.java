@@ -2,6 +2,7 @@ package tw.com.daxia.virtualsoftkeys.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 
 import tw.com.daxia.virtualsoftkeys.BuildConfig;
 
@@ -23,7 +24,9 @@ public class SPFManager {
 
     //Shared config
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
+    //Replace it from bg color
     private static final String CONFIG_TRANSPARENT_BG = "TRANSPARENT_BG";
+    private static final String CONFIG_NVBAR_BG_COLOR = "NVBAR_BG_COLOR";
 
     private static final String CONFIG_DISAPPEAR_TIME = "DISAPPEAR_TIME";
     private static final String CONFIG_SMART_HIDDEN = "SMART_HIDDEN";
@@ -131,15 +134,15 @@ public class SPFManager {
      * Shared Setting Method
      */
 
-    public static boolean getTransparentBg(Context context) {
+    public static int getSoftKeyBarBgGolor(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
-        return settings.getBoolean(CONFIG_TRANSPARENT_BG, false);
+        return settings.getInt(CONFIG_NVBAR_BG_COLOR, Color.BLACK);
     }
 
-    public static void setTransparentBg(Context context, boolean transparent) {
+    public static void setSoftKeyBgGolor(Context context, int nvBarColor) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
-        PE.putBoolean(CONFIG_TRANSPARENT_BG, transparent);
+        PE.putInt(CONFIG_NVBAR_BG_COLOR, nvBarColor);
         PE.commit();
     }
 

@@ -37,12 +37,11 @@
     <string name="config_disappear_time_content">Time for disappearing Softkey bar</string>
 
     <string name="setting_reverse_button_title">Reverse button position:</string>
-    <string name="setting_reverse_button_content">To change the back and overview button position</string>
+    <string name="setting_reverse_button_content">To change the back and recent button position</string>
     <string name="setting_reverse_button_button">Reverse</string>
 
-    <string name="setting_transparent_bg_title">Transparent background:</string>
-    <string name="setting_transparent_bg_content">To make Softkey bar background be transparent</string>
-    <string name="setting_transparent_bg_button">Transparent background</string>
+    <string name="setting_softkey_bg_title">background:</string>
+    <string name="setting_softkey_bg_content">Set Softkey bar\'s background</string>
 
     <string name="setting_smart_hidden_title">Smart hidden(Beta*):</string>
     <string name="setting_smart_hidden_content">Auto hide the permanent Softkey bar when keyboard open\n(It\'s experimental function , close it if you have any problem)</string>
@@ -60,6 +59,7 @@
     <string name="description_clsoe">Don\'t remind</string>
     <string name="description_i_knew">I knew</string>
 
-
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_cancel">Cancel</string>
 
 </resources>
