@@ -25,7 +25,7 @@
     <string name="setting_gesture_position_content">用來觸發手勢的區域位置</string>
 
     <string name="setting_stylus_mode_title">觸控筆模式:</string>
-    <string name="setting_stylus_mode_content">只允許系統支援的觸控筆觸發手勢</string>
+    <string name="setting_stylus_mode_content">只允許系統支援的觸控筆觸發手勢 (S Pen,z stylus&#8230;etc)</string>
     <string name="setting_stylus_mode_button">觸控筆模式</string>
 
     <string name="config_name_title">觸碰設定檔:</string>

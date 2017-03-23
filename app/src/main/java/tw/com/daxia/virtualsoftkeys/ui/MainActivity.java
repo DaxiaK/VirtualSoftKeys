@@ -1,6 +1,7 @@
 package tw.com.daxia.virtualsoftkeys.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
@@ -8,9 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +52,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private View View_touchviewer;
     private ImageView IV_bg_color, IV_my_github;
+
+    /**
+     * Dialog
+     */
+    private DescriptionDialog descriptionDialog;
+    private PermissionDialog permissionDialog;
+
     /**
      * Config
      */
@@ -104,20 +109,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume() {
-        Log.e("test","onResume");
-        super.onResume();
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //Reset the seekbar
+        if (ScreenHepler.isPortrait(getResources())) {
+            isPortrait = true;
+        } else {
+            isPortrait = false;
+        }
+        //Init All Seekbar
+        initSeekBar();
     }
 
     @Override
-    protected void onResumeFragments() {
-        Log.e("test","onResumeFragments");
-        super.onResumeFragments();
+    protected void onResume() {
+        super.onResume();
         boolean drawOverlays = checkSystemAlertWindowPermission();
         boolean accessibility = isAccessibilitySettingsOn();
         if (!drawOverlays || !accessibility) {
-            clearOldDialogFragment(permissionDialogTAG);
-            PermissionDialog permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
+            if (permissionDialog == null) {
+                permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
+            }
             permissionDialog.show(this.getSupportFragmentManager(), permissionDialogTAG);
         }
     }
@@ -125,6 +137,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        if (permissionDialog != null) {
+            permissionDialog.dismiss();
+        }
     }
 
     @Override
@@ -134,8 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showDescription() {
         if (!SPFManager.getDescriptionClose(this)) {
-            clearOldDialogFragment(descriptionDialogTAG);
-            DescriptionDialog descriptionDialog = new DescriptionDialog();
+            descriptionDialog = new DescriptionDialog();
             descriptionDialog.show(this.getSupportFragmentManager(), descriptionDialogTAG);
         }
     }
@@ -372,17 +386,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             View_touchviewer.setLayoutParams(params);
         }
     };
-
-    private void clearOldDialogFragment(String Tag) {
-        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(Tag);
-        if (prev != null) {
-            DialogFragment df = (DialogFragment) prev;
-            df.dismiss();
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-    }
 
 
     private boolean checkSystemAlertWindowPermission() {

@@ -19,14 +19,14 @@
 
     <!--main activity-->
     <string name="setting_gesture_height_title">Gesture height:</string>
-    <string name="setting_gesture_height_content">The height of touch area is</string>
+    <string name="setting_gesture_height_content">The height of touch area</string>
     <string name="setting_gesture_width_title">Gesture width:</string>
-    <string name="setting_gesture_width_content">The width of touch area is</string>
+    <string name="setting_gesture_width_content">The width of touch area</string>
     <string name="setting_gesture_position_title">Gesture position:</string>
     <string name="setting_gesture_position_content">The position of touch area is</string>
 
     <string name="setting_stylus_mode_title">Stylus mode:</string>
-    <string name="setting_stylus_mode_content">Select Stylus mode if your device supports stylus</string>
+    <string name="setting_stylus_mode_content">Triggered only from device supports stylus (S Pen,z stylus&#8230;etc)</string>
     <string name="setting_stylus_mode_button">Stylus mode</string>
 
     <string name="config_name_title">Config:</string>
