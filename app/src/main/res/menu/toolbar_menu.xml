@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_info_outline_black_36dp"
+        android:title="@string/toolbar_menu_about"
+        app:showAsAction="always" />
+</menu>
