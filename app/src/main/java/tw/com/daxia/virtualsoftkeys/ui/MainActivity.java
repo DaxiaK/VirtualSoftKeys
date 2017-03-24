@@ -132,9 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean drawOverlays = checkSystemAlertWindowPermission();
         boolean accessibility = isAccessibilitySettingsOn();
         if (!drawOverlays || !accessibility) {
-            if (permissionDialog == null) {
-                permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
-            }
+            permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
             permissionDialog.show(this.getSupportFragmentManager(), permissionDialogTAG);
         }
     }
