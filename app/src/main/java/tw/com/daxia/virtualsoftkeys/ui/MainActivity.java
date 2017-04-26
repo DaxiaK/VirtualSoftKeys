@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Disappear time
         initDisappearSpinner();
         //Reverse button position
-        CTV_reverse_button.setChecked(SPFManager.getReverseButton(this));
+        CTV_reverse_button.setChecked(SPFManager.getReverseFunctionButton(this));
         CTV_reverse_button.setOnClickListener(this);
         //make bar bg be transparent
         IV_bg_color.setImageDrawable(new ColorDrawable(SPFManager.getSoftKeyBarBgGolor(this)));
@@ -463,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.CTV_reverse_button: {
                 CTV_reverse_button.toggle();
-                SPFManager.setReverseButton(this, CTV_reverse_button.isChecked());
+                SPFManager.setReverseFunctionButton(this, CTV_reverse_button.isChecked());
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
                     mAccessibilityService.updateReverseButton(CTV_reverse_button.isChecked());

@@ -208,12 +208,12 @@ public class SPFManager {
         PE.commit();
     }
 
-    public static boolean getReverseButton(Context context) {
+    public static boolean getReverseFunctionButton(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         return settings.getBoolean(CONFIG_REVERSE_BUTTON, false);
     }
 
-    public static void setReverseButton(Context context, boolean reverseButton) {
+    public static void setReverseFunctionButton(Context context, boolean reverseButton) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
         PE.putBoolean(CONFIG_REVERSE_BUTTON, reverseButton);

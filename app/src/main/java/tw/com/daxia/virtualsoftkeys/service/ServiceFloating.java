@@ -119,7 +119,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         softKeyBarHandler = new SoftKeyBarHandler(this);
         stylusOnlyMode = SPFManager.getStylusOnlyMode(this);
         rotateHidden = SPFManager.getRotateHidden(this);
-        reverseButton = SPFManager.getReverseButton(this);
+        reverseButton = SPFManager.getReverseFunctionButton(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
         canDrawOverlays = checkSystemAlertWindowPermission();
@@ -370,7 +370,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
      * Handler + Runnable
      */
 
-    private void hiddenSoftKeyBar(boolean now) {
+    public void hiddenSoftKeyBar(boolean now) {
         if (now) {
             softKeyBarHandler.removeCallbacksAndMessages(null);
             isDelay = false;
