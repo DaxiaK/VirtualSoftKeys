@@ -1,10 +1,12 @@
-package tw.com.daxia.virtualsoftkeys.service.module;
+package tw.com.daxia.virtualsoftkeys.service.view;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
@@ -17,14 +19,14 @@ import static tw.com.daxia.virtualsoftkeys.common.Link.GOOGLE_PLAY_LINK;
  * Created by daxia on 2017/4/26.
  */
 
-public abstract class SofyKeyView {
+public abstract class SoftKeyView {
 
     /*
      * View
      */
-    private View baseView;
-    private ImageButton IB_button_start, IB_button_end, IB_button_home;
-    private ServiceFloating accessibilityService;
+    protected View baseView;
+    protected ImageButton IB_button_start, IB_button_end, IB_button_home;
+    protected ServiceFloating accessibilityService;
     /*
      *  Listener
      */
@@ -35,14 +37,21 @@ public abstract class SofyKeyView {
     /*
      * Configure
      */
+    protected boolean stylusOnlyMode;
     private boolean reverseFunctionButton;
 
+    /*
+     * Device value
+     */
+    protected int softkeyBarHeight;
 
-    public SofyKeyView(ServiceFloating accessibilityService) {
+
+    public SoftKeyView(ServiceFloating accessibilityService) {
         init(accessibilityService);
         loadConfigure();
         initBaseView();
-        initButtonView();
+        initBaseViewTheme();
+        initTouchEvent();
         setSoftKeyEvent();
 
     }
@@ -51,15 +60,25 @@ public abstract class SofyKeyView {
      * The concrete method
      */
 
+
+
     /**
-     * Link the base view
+     * Link the base view & find the button view
      */
     abstract void initBaseView();
 
     /**
-     * Link the button view
+     * set the base view theme
      */
-    abstract void initButtonView();
+    public abstract void initBaseViewTheme();
+    /**
+     * Init Touch event for close the softkey bar
+     */
+    abstract void initTouchEvent();
+
+
+
+    public abstract WindowManager.LayoutParams getLayoutParamsForLocation();
 
 
     private void init(ServiceFloating accessibilityService) {
@@ -72,7 +91,7 @@ public abstract class SofyKeyView {
      */
     public void loadConfigure() {
         this.reverseFunctionButton = SPFManager.getReverseFunctionButton(accessibilityService);
-
+        this.stylusOnlyMode = SPFManager.getStylusOnlyMode(accessibilityService);
     }
 
     private void setSoftKeyEvent() {
@@ -107,7 +126,9 @@ public abstract class SofyKeyView {
             public boolean onLongClick(View v) {
                 if (v.getId() == IB_button_start.getId()) {
                     if (reverseFunctionButton) {
-                        accessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            accessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+                        }
                     }
                 } else if (v.getId() == IB_button_home.getId()) {
                     Intent intent = accessibilityService.getPackageManager().getLaunchIntentForPackage(GOOGLE_APP_PACKAGE_NAME);
@@ -126,7 +147,9 @@ public abstract class SofyKeyView {
 
                 } else if (v.getId() == IB_button_end.getId()) {
                     if (!reverseFunctionButton) {
-                        accessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            accessibilityService.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
+                        }
                     }
                 }
                 //Only trigger long click

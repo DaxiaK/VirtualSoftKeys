@@ -397,7 +397,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
             if (mAccessibilityService != null) {
                 mAccessibilityService.updateTouchView(null, null, seekBar.getProgress());
-                mAccessibilityService = null;
             }
         }
 
@@ -456,8 +455,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SPFManager.setStylusOnlyMode(this, CTV_stylus_only_mode.isChecked());
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
-                    mAccessibilityService.updateStylusOnlyMode(CTV_stylus_only_mode.isChecked());
-                    mAccessibilityService = null;
+                    mAccessibilityService.updateTouchViewConfigure();
                 }
                 break;
             }
@@ -466,8 +464,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SPFManager.setReverseFunctionButton(this, CTV_reverse_button.isChecked());
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
-                    mAccessibilityService.updateReverseButton(CTV_reverse_button.isChecked());
-                    mAccessibilityService = null;
+                    mAccessibilityService.updateSoftKeyConfigure();
                 }
                 break;
             }
@@ -483,7 +480,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
                     mAccessibilityService.updateSmartHidden(CTV_smart_hidden.isChecked());
-                    mAccessibilityService = null;
                 }
                 break;
             }
@@ -493,8 +489,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
                     mAccessibilityService.updateRotateHidden(CTV_hidden_when_rotate.isChecked());
-                    mAccessibilityService = null;
-                }
+                    }
                 break;
             }
             case R.id.IV_my_github: {
@@ -515,8 +510,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SPFManager.setSoftKeyBgGolor(this, colorCode);
         ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
         if (mAccessibilityService != null) {
-            mAccessibilityService.updateSoftKeyBarBg(colorCode);
-            mAccessibilityService = null;
+            mAccessibilityService.updateSoftKeyTheme();
         }
     }
 }

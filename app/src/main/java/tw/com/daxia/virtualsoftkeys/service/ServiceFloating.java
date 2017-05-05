@@ -5,23 +5,15 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
-import android.view.HapticFeedbackConstants;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
@@ -29,12 +21,14 @@ import java.lang.ref.WeakReference;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
+import tw.com.daxia.virtualsoftkeys.service.view.SoftKeyTabletLandscapeView;
+import tw.com.daxia.virtualsoftkeys.service.view.SoftKeyView;
+import tw.com.daxia.virtualsoftkeys.service.view.TouchEventView;
 import tw.com.daxia.virtualsoftkeys.setting.DisappearObj;
 
 
-public class ServiceFloating extends AccessibilityService implements View.OnClickListener, View.OnLongClickListener {
+public class ServiceFloating extends AccessibilityService {
 
-    private final static String GOOGLE_APP_PACKAGE_NAME = "com.google.android.googlequicksearchbox";
 
     private static ServiceFloating sSharedInstance;
     /**
@@ -46,26 +40,18 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     /**
      * Config
      */
-    private int miniTouchGestureHeight;
-    private final static int miniTouchGestureHeightSensitivity = 4;
-    private final static int SOFTKEY_BAR_HEIGHT = 48;
 
     private DisappearObj disappearObj;
 
-    private boolean stylusOnlyMode;
-    private boolean canDrawOverlays;
     private boolean isPortrait;
     private boolean rotateHidden;
-    private boolean reverseButton;
 
     /**
      * View
      */
     private WindowManager windowManager;
-    private View softKeyBar;
-    private View touchView;
-    //SoftKeyview
-    private ImageButton IB_button_home, IB_button_left, IB_button_right;
+    private SoftKeyView softKeyBar;
+    private TouchEventView touchEventView;
 
     public static ServiceFloating getSharedInstance() {
         return sSharedInstance;
@@ -117,12 +103,10 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         sSharedInstance = this;
         disappearObj = new DisappearObj(this);
         softKeyBarHandler = new SoftKeyBarHandler(this);
-        stylusOnlyMode = SPFManager.getStylusOnlyMode(this);
         rotateHidden = SPFManager.getRotateHidden(this);
-        reverseButton = SPFManager.getReverseFunctionButton(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
-        canDrawOverlays = checkSystemAlertWindowPermission();
+       boolean canDrawOverlays = checkSystemAlertWindowPermission();
         if (canDrawOverlays) {
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
             if (ScreenHepler.isPortrait(getResources())) {
@@ -139,11 +123,11 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (touchView != null) {
-            windowManager.removeView(touchView);
+        if (touchEventView != null) {
+            windowManager.removeView(touchEventView.getTouchView());
         }
         if (softKeyBar != null) {
-            windowManager.removeView(softKeyBar);
+            windowManager.removeView(softKeyBar.getBaseView());
         }
     }
 
@@ -154,7 +138,7 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             //Check the focused view is from Edittext object
             Class<?> clazz = Class.forName(event.getClassName().toString());
             if (EditText.class.isAssignableFrom(clazz) && disappearObj.getConfigTime() == DisappearObj.TIME_NEVER && softKeyBar != null) {
-                softKeyBar.setVisibility(View.GONE);
+                softKeyBar.getBaseView().setVisibility(View.GONE);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -179,63 +163,22 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
 
 
     private void initTouchView() {
-        touchView = new View(this);
-        touchView.setBackgroundColor(Color.parseColor("#00000000"));
-        if (isPortrait) {
-            miniTouchGestureHeight = SPFManager.getTouchviewPortraitHeight(this) / miniTouchGestureHeightSensitivity;
-            //transparent color
-            windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewPortraitHeight(this),
-                    SPFManager.getTouchviewPortraitWidth(this), SPFManager.getTouchviewPortraitPosition(this)));
-        } else {
-            miniTouchGestureHeight = SPFManager.getTouchviewLandscapeHeight(this) / miniTouchGestureHeightSensitivity;
-            //transparent color
-            windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewLandscapeHeight(this),
-                    SPFManager.getTouchviewLandscapeWidth(this), SPFManager.getTouchviewLandscapePosition(this)));
-        }
-        touchView.setOnTouchListener(touchViewOnTouchListener);
+        touchEventView = new TouchEventView(this);
+        touchEventView.updateParamsForLocation(windowManager,isPortrait);
     }
 
-    private View.OnTouchListener touchViewOnTouchListener = new View.OnTouchListener() {
-        private float initialTouchY;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (stylusOnlyMode) {
-                if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
-                    touchViewTouchEvent(event);
-                }
-            } else {
-                touchViewTouchEvent(event);
-            }
-
-            return false;
-        }
-
-        private void touchViewTouchEvent(MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    initialTouchY = event.getRawY();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if ((initialTouchY - event.getRawY()) > miniTouchGestureHeight) {
-                        showSoftKeyBar();
-                    }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    break;
-            }
-        }
-    };
 
     /**
      * Update config by mainActivity
      */
-    public void updateTouchView(@Nullable Integer heightPx, @Nullable Integer widthPx, @Nullable Integer position) {
+    public void updateTouchView(@Nullable Integer heightPx,
+                                @Nullable Integer widthPx,
+                                @Nullable Integer position) {
         //set config
-        if (touchView != null) {
-            WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchView.getLayoutParams();
+        if (touchEventView != null) {
+            WindowManager.LayoutParams params = (WindowManager.LayoutParams) touchEventView.getTouchView().getLayoutParams();
             if (heightPx != null) {
-                this.miniTouchGestureHeight = heightPx / miniTouchGestureHeightSensitivity;
+                touchEventView.updateMiniTouchGestureHeight(heightPx);
                 params.height = heightPx;
             }
             if (widthPx != null) {
@@ -244,18 +187,26 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
             if (position != null) {
                 params.x = position;
             }
-            windowManager.updateViewLayout(touchView, params);
+            touchEventView.updateParamsForLocation(windowManager,params);
         }
     }
 
-    public void updateSoftKeyBarBg(int bgColor) {
+    public void updateSoftKeyConfigure() {
         if (softKeyBar != null) {
-                softKeyBar.setBackgroundColor(bgColor);
+            softKeyBar.loadConfigure();
         }
     }
 
-    public void updateStylusOnlyMode(boolean stylusOnly) {
-        this.stylusOnlyMode = stylusOnly;
+    public void updateSoftKeyTheme() {
+        if (softKeyBar != null) {
+            softKeyBar.initBaseViewTheme();
+        }
+    }
+
+    public void updateTouchViewConfigure() {
+        if (touchEventView != null) {
+            touchEventView.loadConfigure();
+        }
     }
 
     public void updateDisappearTime(int spinnerPosition) {
@@ -270,101 +221,16 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         this.rotateHidden = rotateHidden;
     }
 
-    public void updateReverseButton(boolean reverseButton) {
-        this.reverseButton = reverseButton;
-        setIBButtonGUI();
-    }
 
-    private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                weightPx,
-                heightPx,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.BOTTOM | Gravity.LEFT;
-        params.x = position;
-        params.y = 0;
-        return params;
-    }
-
-
-    private void showSoftKeyBar() {
+    public void showSoftKeyBar() {
         if (softKeyBar == null) {
-            LayoutInflater li = LayoutInflater.from(this);
-            softKeyBar = li.inflate(R.layout.navigation_bar, null, true);
-            softKeyBar.setOnTouchListener(new View.OnTouchListener() {
-                private float firstSoftKeyTouchY;
-
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    hiddenSoftKeyBar(false);
-                    if (stylusOnlyMode) {
-                        if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
-                            touchViewTouchEvent(event);
-                        }
-                    } else {
-                        touchViewTouchEvent(event);
-                    }
-                    return false;
-                }
-
-                private void touchViewTouchEvent(MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            firstSoftKeyTouchY = event.getRawY();
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            //Close the softKeyBar after swiping down more the 1/4 height
-                            if ((event.getRawY() - firstSoftKeyTouchY) > (ScreenHepler.dpToPixel(getResources(), SOFTKEY_BAR_HEIGHT) / 4)) {
-                                hiddenSoftKeyBar(true);
-                            }
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            break;
-                    }
-                }
-            });
-            //Init all button
-            IB_button_left = (ImageButton) softKeyBar.findViewById(R.id.IB_button_left);
-            IB_button_left.setOnClickListener(this);
-            IB_button_left.setOnLongClickListener(this);
-            IB_button_home = (ImageButton) softKeyBar.findViewById(R.id.IB_button_home);
-            IB_button_home.setOnClickListener(this);
-            IB_button_home.setOnLongClickListener(this);
-            IB_button_right = (ImageButton) softKeyBar.findViewById(R.id.IB_button_right);
-            IB_button_right.setOnClickListener(this);
-            IB_button_right.setOnLongClickListener(this);
-            setIBButtonGUI();
-            final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    ScreenHepler.dpToPixel(getResources(), SOFTKEY_BAR_HEIGHT),
-                    WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    PixelFormat.TRANSLUCENT);
-            params.windowAnimations = android.R.style.Animation_InputMethod;
-            params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-            params.x = 0;
-            params.y = 0;
-            windowManager.addView(softKeyBar, params);
-            updateSoftKeyBarBg(SPFManager.getSoftKeyBarBgGolor(this));
+            softKeyBar = new SoftKeyTabletLandscapeView(this);
+            windowManager.addView(softKeyBar.getBaseView(), softKeyBar.getLayoutParamsForLocation());
         } else {
-            softKeyBar.setVisibility(View.VISIBLE);
+            softKeyBar.getBaseView().setVisibility(View.VISIBLE);
         }
     }
 
-    private void setIBButtonGUI() {
-        if (softKeyBar != null) {
-            if (reverseButton) {
-                IB_button_left.setImageResource(R.drawable.ic_sysbar_overview);
-                IB_button_right.setImageResource(R.drawable.ic_sysbar_back);
-            } else {
-                IB_button_left.setImageResource(R.drawable.ic_sysbar_back);
-                IB_button_right.setImageResource(R.drawable.ic_sysbar_overview);
-            }
-        }
-
-    }
 
     /**
      * Handler + Runnable
@@ -395,73 +261,11 @@ public class ServiceFloating extends AccessibilityService implements View.OnClic
         public void handleMessage(Message msg) {
             ServiceFloating theService = mService.get();
             if (theService.softKeyBar != null) {
-                theService.softKeyBar.setVisibility(View.GONE);
+                theService.softKeyBar.getBaseView().setVisibility(View.GONE);
             }
             theService.isDelay = false;
         }
     }
 
 
-    /**
-     * Implements
-     */
-
-    @Override
-    public void onClick(View v) {
-        //Add HapticFeedback
-        v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-        switch (v.getId()) {
-            case R.id.IB_button_left:
-                if (reverseButton) {
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
-                } else {
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-                }
-                break;
-            case R.id.IB_button_home:
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
-                break;
-            case R.id.IB_button_right:
-                if (reverseButton) {
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-                } else {
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_RECENTS);
-                }
-                break;
-        }
-        hiddenSoftKeyBar(false);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        switch (v.getId()) {
-            case R.id.IB_button_left:
-                if (reverseButton) {
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
-                }
-                break;
-            case R.id.IB_button_home:
-                Intent intent = getPackageManager().getLaunchIntentForPackage(GOOGLE_APP_PACKAGE_NAME);
-                if (intent != null) {
-                    // We found the activity now start the activity
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } else {
-                    // Bring user to the market or let them choose an app?
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + GOOGLE_APP_PACKAGE_NAME));
-                    startActivity(intent);
-                }
-                break;
-            case R.id.IB_button_right:
-                if (!reverseButton) {
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_TOGGLE_SPLIT_SCREEN);
-                }
-                break;
-        }
-
-        return true;
-    }
 }
