@@ -12,9 +12,12 @@ public class DisappearObj {
 
     public final static int TIME_NEVER = -1;
     public final static int TIME_NOW = 0;
-    public final static int TIME_1S = 1 * 1000;
-    public final static int TIME_3S = 3 * 1000;
-    public final static int TIME_5S = 5 * 1000;
+    public final static int TIME_1S = 1000;
+    public final static int TIME_1_5S =  1500;
+    public final static int TIME_2S = 2000;
+    public final static int TIME_3S = 3000;
+    public final static int TIME_4S = 4000;
+    public final static int TIME_5S = 5000;
 
     private int configTime;
     private Context context;
@@ -48,9 +51,18 @@ public class DisappearObj {
                 disappearTime = TIME_1S;
                 break;
             case 3:
-                disappearTime = TIME_3S;
+                disappearTime = TIME_1_5S;
                 break;
             case 4:
+                disappearTime = TIME_2S;
+                break;
+            case 5:
+                disappearTime = TIME_3S;
+                break;
+            case 6:
+                disappearTime = TIME_4S;
+                break;
+            case 7:
                 disappearTime = TIME_5S;
                 break;
             // = case 0

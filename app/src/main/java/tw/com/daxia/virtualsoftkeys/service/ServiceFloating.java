@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.text.Editable;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
@@ -137,7 +138,9 @@ public class ServiceFloating extends AccessibilityService {
         try {
             //Check the focused view is from Edittext object
             Class<?> clazz = Class.forName(event.getClassName().toString());
-            if (EditText.class.isAssignableFrom(clazz) && disappearObj.getConfigTime() == DisappearObj.TIME_NEVER && softKeyBar != null) {
+            if ((Editable.class.isAssignableFrom(clazz) || EditText.class.isAssignableFrom(clazz))
+                    && disappearObj.getConfigTime() == DisappearObj.TIME_NEVER
+                    && softKeyBar != null) {
                 softKeyBar.getBaseView().setVisibility(View.GONE);
             }
         } catch (ClassNotFoundException e) {
@@ -191,17 +194,13 @@ public class ServiceFloating extends AccessibilityService {
         }
     }
 
-    public void updateSoftKeyConfigure() {
-        if (softKeyBar != null) {
-            softKeyBar.loadConfigure();
+    public void refreshSoftKey() {
+        if(softKeyBar!=null){
+            softKeyBar.refresh();
         }
     }
 
-    public void updateSoftKeyTheme() {
-        if (softKeyBar != null) {
-            softKeyBar.initBaseViewTheme();
-        }
-    }
+
 
     public void updateTouchViewConfigure() {
         if (touchEventView != null) {
@@ -253,7 +252,7 @@ public class ServiceFloating extends AccessibilityService {
 
         private WeakReference<ServiceFloating> mService;
 
-        public SoftKeyBarHandler(ServiceFloating aService) {
+        SoftKeyBarHandler(ServiceFloating aService) {
             mService = new WeakReference<>(aService);
         }
 

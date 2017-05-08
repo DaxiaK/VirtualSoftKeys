@@ -36,11 +36,22 @@ public class SoftKeyTabletPortraitView extends SoftKeyView {
     }
 
     @Override
-   public void initBaseViewTheme() {
+    void initBaseViewTheme() {
         this.softkeyBarHeight = ScreenHepler.dpToPixel(accessibilityService.getResources(), 48);
         this.baseView.setBackgroundColor(SPFManager.getSoftKeyBarBgGolor(accessibilityService));
-
     }
+
+    @Override
+    void initImageButton() {
+        if(reverseFunctionButton){
+            IB_button_start.setImageResource(R.drawable.ic_sysbar_recent);
+            IB_button_end.setImageResource(R.drawable.ic_sysbar_back);
+        }else{
+            IB_button_start.setImageResource(R.drawable.ic_sysbar_back);
+            IB_button_end.setImageResource(R.drawable.ic_sysbar_recent);
+        }
+    }
+
 
     @Override
      void initTouchEvent() {

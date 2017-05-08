@@ -38,7 +38,7 @@ public abstract class SoftKeyView {
      * Configure
      */
     protected boolean stylusOnlyMode;
-    private boolean reverseFunctionButton;
+    protected boolean reverseFunctionButton;
 
     /*
      * Device value
@@ -50,6 +50,7 @@ public abstract class SoftKeyView {
         init(accessibilityService);
         loadConfigure();
         initBaseView();
+        initImageButton();
         initBaseViewTheme();
         initTouchEvent();
         setSoftKeyEvent();
@@ -70,7 +71,12 @@ public abstract class SoftKeyView {
     /**
      * set the base view theme
      */
-    public abstract void initBaseViewTheme();
+     abstract void initBaseViewTheme();
+    /**
+     * set the button
+     */
+    abstract void initImageButton();
+
     /**
      * Init Touch event for close the softkey bar
      */
@@ -89,7 +95,14 @@ public abstract class SoftKeyView {
      * Get all configure from SPF.
      * It is also for refresh SPF or input new SPF.
      */
-    public void loadConfigure() {
+    public void refresh(){
+        loadConfigure();
+        initImageButton();
+        initBaseViewTheme();
+    }
+
+
+    private void loadConfigure() {
         this.reverseFunctionButton = SPFManager.getReverseFunctionButton(accessibilityService);
         this.stylusOnlyMode = SPFManager.getStylusOnlyMode(accessibilityService);
     }

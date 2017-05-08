@@ -464,7 +464,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SPFManager.setReverseFunctionButton(this, CTV_reverse_button.isChecked());
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
-                    mAccessibilityService.updateSoftKeyConfigure();
+                    mAccessibilityService.refreshSoftKey();
                 }
                 break;
             }
@@ -510,7 +510,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SPFManager.setSoftKeyBgGolor(this, colorCode);
         ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
         if (mAccessibilityService != null) {
-            mAccessibilityService.updateSoftKeyTheme();
+            mAccessibilityService.refreshSoftKey();
         }
     }
 }
