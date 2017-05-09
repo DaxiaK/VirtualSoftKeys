@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private final static String TAG = "MainActivity";
-    private final static String MY_GIT_HUB_URL = "https://github.com/erttyy8821/VirtualSoftKeys";
+    private final static String MY_GIT_HUB_URL = "https://github.com/DaxiaK/VirtualSoftKeys";
     private final static int MAX_HEIGHT_PERCENTAGE = 20;
     private final static String descriptionDialogTAG = "descriptionDialog";
     private final static String permissionDialogTAG = "permissionDialog";

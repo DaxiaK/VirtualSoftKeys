@@ -1,6 +1,8 @@
 package tw.com.daxia.virtualsoftkeys.service.view;
 
+import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +13,7 @@ import android.widget.ImageButton;
 import tw.com.daxia.virtualsoftkeys.R;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
+import tw.com.daxia.virtualsoftkeys.common.ThemeHelper;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
 
 /**
@@ -38,8 +41,25 @@ public class SoftKeyTabletLandscapeView extends SoftKeyView {
     @Override
     void initBaseViewTheme() {
         this.softkeyBarHeight = ScreenHepler.dpToPixel(accessibilityService.getResources(), 48);
-        this.baseView.setBackgroundColor(SPFManager.getSoftKeyBarBgGolor(accessibilityService));
+        int backgroundColor = SPFManager.getSoftKeyBarBgGolor(accessibilityService);
+        this.baseView.setBackgroundColor(backgroundColor);
 
+        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.LOLLIPOP) {
+            //Set button
+            int pressColor;
+            if(ThemeHelper.isColorDark(backgroundColor)){
+                pressColor = Color.WHITE;
+            }else{
+                pressColor = Color.BLACK;
+            }
+            this.IB_button_home.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
+            this.IB_button_end.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
+            this.IB_button_start.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
+        }else{
+            this.IB_button_home.setBackgroundResource(R.drawable.ic_sys_background);
+            this.IB_button_start.setBackgroundResource(R.drawable.ic_sys_background);
+            this.IB_button_end.setBackgroundResource(R.drawable.ic_sys_background);
+        }
     }
 
     @Override
