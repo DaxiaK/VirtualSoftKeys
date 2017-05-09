@@ -30,13 +30,14 @@ import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
 
+import static tw.com.daxia.virtualsoftkeys.common.Link.MY_GIT_HUB_URL;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         ColorPickerFragment.colorPickerCallback {
 
 
     private final static String TAG = "MainActivity";
-    private final static String MY_GIT_HUB_URL = "https://github.com/DaxiaK/VirtualSoftKeys";
     private final static int MAX_HEIGHT_PERCENTAGE = 20;
     private final static String descriptionDialogTAG = "descriptionDialog";
     private final static String permissionDialogTAG = "permissionDialog";
