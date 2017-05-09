@@ -50,7 +50,7 @@ public class SoftKeyTabletLandscapeView extends SoftKeyView {
             if(ThemeHelper.isColorDark(backgroundColor)){
                 pressColor = Color.WHITE;
             }else{
-                pressColor = Color.BLACK;
+                pressColor = Color.GRAY;
             }
             this.IB_button_home.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
             this.IB_button_end.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
