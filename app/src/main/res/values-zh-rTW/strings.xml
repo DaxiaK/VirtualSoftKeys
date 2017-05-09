@@ -58,6 +58,12 @@
     <string name="description_clsoe">不再提醒</string>
     <string name="description_i_knew">我知道了</string>
 
+    <!--accessibility service error Dialog-->
+    <string name="accessibility_service_error_title">服務出錯了</string>
+    <string name="accessibility_service_error_content">服務似乎出了一點問題，請幫我再重新打開一次無障礙設定中的VirtualSoftKeys</string>
+    <string name="accessibility_service_error_go">衝阿</string>
+
+
     <string name="dialog_ok">確定</string>
     <string name="dialog_cancel">取消</string>
 

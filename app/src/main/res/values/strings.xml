@@ -59,6 +59,13 @@
     <string name="description_clsoe">Don\'t remind</string>
     <string name="description_i_knew">I knew</string>
 
+    <!--accessibility service error Dialog-->
+    <string name="accessibility_service_error_title">Service error</string>
+    <string name="accessibility_service_error_content">Service seem has some problem , please help me to open VirtualSoftKeys in accessibility again!</string>
+    <string name="accessibility_service_error_go">Go</string>
+
+
+
     <string name="dialog_ok">Ok</string>
     <string name="dialog_cancel">Cancel</string>
 

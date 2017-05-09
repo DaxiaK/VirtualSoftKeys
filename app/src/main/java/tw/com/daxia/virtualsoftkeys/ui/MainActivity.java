@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static int MAX_HEIGHT_PERCENTAGE = 20;
     private final static String descriptionDialogTAG = "descriptionDialog";
     private final static String permissionDialogTAG = "permissionDialog";
+    private final static String accessibilityServiceDialogTAG = "accessibilityServiceDialog";
 
     /**
      * UI
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private DescriptionDialog descriptionDialog;
     private PermissionDialog permissionDialog;
+    private AccessibilityServiceErrorDialog accessibilityServiceDialog;
 
     /**
      * Config
@@ -134,6 +136,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!drawOverlays || !accessibility) {
             permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
             permissionDialog.show(this.getSupportFragmentManager(), permissionDialogTAG);
+        } else {
+            if (ServiceFloating.getSharedInstance() == null) {
+                Log.e("test","null");
+                accessibilityServiceDialog = new AccessibilityServiceErrorDialog();
+                accessibilityServiceDialog.show(this.getSupportFragmentManager(), accessibilityServiceDialogTAG);
+            }else{
+                Log.e("test","not null");
+            }
         }
     }
 
@@ -142,6 +152,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         if (permissionDialog != null) {
             permissionDialog.dismiss();
+        }
+        if (accessibilityServiceDialog != null) {
+            accessibilityServiceDialog.dismiss();
         }
     }
 
@@ -489,7 +502,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
                 if (mAccessibilityService != null) {
                     mAccessibilityService.updateRotateHidden(CTV_hidden_when_rotate.isChecked());
-                    }
+                }
                 break;
             }
             case R.id.IV_my_github: {
