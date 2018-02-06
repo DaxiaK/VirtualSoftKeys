@@ -3,6 +3,7 @@ package tw.com.daxia.virtualsoftkeys.ui;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -84,9 +85,11 @@ public class PermissionDialog extends DialogFragment implements View.OnClickList
     }
 
     private void gotoDrawOverlaysPage() {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + getActivity().getPackageName()));
-        startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getActivity().getPackageName()));
+            startActivity(intent);
+        }
     }
 
     @Override

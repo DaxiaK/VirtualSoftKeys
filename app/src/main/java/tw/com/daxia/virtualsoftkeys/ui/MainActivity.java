@@ -1,5 +1,7 @@
 package tw.com.daxia.virtualsoftkeys.ui;
 
+import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
@@ -9,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 
 import tw.com.daxia.virtualsoftkeys.BuildConfig;
 import tw.com.daxia.virtualsoftkeys.R;
+import tw.com.daxia.virtualsoftkeys.common.PermissionUtils;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
@@ -58,11 +62,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView IV_bg_color, IV_my_github;
 
     /**
+     * Permission
+     */
+    private boolean drawOverlays = false;
+    private AppOpsManager.OnOpChangedListener onOpChangedListener = null;
+
+    /**
      * Dialog
      */
     private DescriptionDialog descriptionDialog;
     private PermissionDialog permissionDialog;
     private AccessibilityServiceErrorDialog accessibilityServiceDialog;
+
 
     /**
      * Config
@@ -132,18 +143,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        boolean drawOverlays = checkSystemAlertWindowPermission();
+        if (needAndroidOCanDrawWorkaround()) {
+            if (onOpChangedListener == null) {
+                drawOverlays = PermissionUtils.checkSystemAlertWindowPermission(this);
+            }
+            AndroidOCanDrawWorkaround();
+        } else {
+            drawOverlays = PermissionUtils.checkSystemAlertWindowPermission(this);
+        }
+
         boolean accessibility = isAccessibilitySettingsOn();
+        //Fix Android O bug
         if (!drawOverlays || !accessibility) {
             permissionDialog = PermissionDialog.newInstance(drawOverlays, accessibility);
             permissionDialog.show(this.getSupportFragmentManager(), permissionDialogTAG);
         } else {
             if (ServiceFloating.getSharedInstance() == null) {
-                Log.e("test","null");
                 accessibilityServiceDialog = new AccessibilityServiceErrorDialog();
                 accessibilityServiceDialog.show(this.getSupportFragmentManager(), accessibilityServiceDialogTAG);
-            }else{
-                Log.e("test","not null");
             }
         }
     }
@@ -185,6 +202,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    //Android O has a bug  which is Settings.canDrawOverlays(context) not work before we restart app
+    //So we use workaround from:
+    //https://stackoverflow.com/questions/46173460/why-in-android-o-method-settings-candrawoverlays-returns-false-when-user-has/48127195.
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void AndroidOCanDrawWorkaround() {
+        if (!drawOverlays) {
+            AppOpsManager opsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+            onOpChangedListener = new AppOpsManager.OnOpChangedListener() {
+                @Override
+                public void onOpChanged(String op, String packageName) {
+                    String myPackageName = getPackageName();
+                    if (myPackageName.equals(packageName) &&
+                            AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW.equals(op)) {
+                        drawOverlays = !drawOverlays;
+                    }
+                }
+            };
+            if (opsManager != null) {
+                opsManager.startWatchingMode(AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW,
+                        null, onOpChangedListener);
+            }
+        } else {
+            AppOpsManager opsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+            if (opsManager != null && onOpChangedListener != null) {
+                opsManager.stopWatchingMode(onOpChangedListener);
+                onOpChangedListener = null;
+            }
+        }
+    }
+
+    private boolean needAndroidOCanDrawWorkaround() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
 
 
@@ -427,16 +478,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-
-    private boolean checkSystemAlertWindowPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (!Settings.canDrawOverlays(this)) {
-            return false;
-        }
-        return true;
-    }
 
     public boolean isAccessibilitySettingsOn() {
         int accessibilityEnabled = 0;

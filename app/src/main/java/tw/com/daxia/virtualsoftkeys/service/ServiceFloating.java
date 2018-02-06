@@ -5,10 +5,8 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.view.View;
@@ -20,6 +18,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 import tw.com.daxia.virtualsoftkeys.R;
+import tw.com.daxia.virtualsoftkeys.common.PermissionUtils;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.service.view.SoftKeyTabletLandscapeView;
@@ -65,15 +64,6 @@ public class ServiceFloating extends AccessibilityService {
     }
 
 
-    private boolean checkSystemAlertWindowPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (!Settings.canDrawOverlays(this)) {
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -107,7 +97,7 @@ public class ServiceFloating extends AccessibilityService {
         rotateHidden = SPFManager.getRotateHidden(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
-       boolean canDrawOverlays = checkSystemAlertWindowPermission();
+       boolean canDrawOverlays = PermissionUtils.checkSystemAlertWindowPermission(this);
         if (canDrawOverlays) {
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
             if (ScreenHepler.isPortrait(getResources())) {
