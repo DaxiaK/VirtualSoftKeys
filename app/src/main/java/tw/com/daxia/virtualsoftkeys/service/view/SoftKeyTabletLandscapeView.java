@@ -28,9 +28,8 @@ public class SoftKeyTabletLandscapeView extends SoftKeyView {
     }
 
 
-
     @Override
-     void initBaseView() {
+    void initBaseView() {
         LayoutInflater li = LayoutInflater.from(accessibilityService);
         this.baseView = li.inflate(R.layout.navigation_bar_t_l, null, true);
         this.IB_button_home = (ImageButton) baseView.findViewById(R.id.IB_button_home);
@@ -44,18 +43,18 @@ public class SoftKeyTabletLandscapeView extends SoftKeyView {
         int backgroundColor = SPFManager.getSoftKeyBarBgGolor(accessibilityService);
         this.baseView.setBackgroundColor(backgroundColor);
 
-        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //Set button
             int pressColor;
-            if(ThemeHelper.isColorDark(backgroundColor)){
+            if (ThemeHelper.isColorDark(backgroundColor)) {
                 pressColor = Color.WHITE;
-            }else{
+            } else {
                 pressColor = Color.GRAY;
             }
             this.IB_button_home.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
             this.IB_button_end.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
             this.IB_button_start.setBackground(ThemeHelper.getPressedColorRippleDrawable(pressColor));
-        }else{
+        } else {
             this.IB_button_home.setBackgroundResource(R.drawable.ic_sys_background);
             this.IB_button_start.setBackgroundResource(R.drawable.ic_sys_background);
             this.IB_button_end.setBackgroundResource(R.drawable.ic_sys_background);
@@ -64,17 +63,17 @@ public class SoftKeyTabletLandscapeView extends SoftKeyView {
 
     @Override
     void initImageButton() {
-        if(reverseFunctionButton){
+        if (reverseFunctionButton) {
             IB_button_start.setImageResource(R.drawable.ic_sysbar_recent);
             IB_button_end.setImageResource(R.drawable.ic_sysbar_back);
-        }else{
+        } else {
             IB_button_start.setImageResource(R.drawable.ic_sysbar_back);
             IB_button_end.setImageResource(R.drawable.ic_sysbar_recent);
         }
     }
 
     @Override
-     void initTouchEvent() {
+    void initTouchEvent() {
         baseView.setOnTouchListener(new View.OnTouchListener() {
             private float firstSoftKeyTouchY;
 
@@ -111,13 +110,24 @@ public class SoftKeyTabletLandscapeView extends SoftKeyView {
 
     @Override
     public WindowManager.LayoutParams getLayoutParamsForLocation() {
+        WindowManager.LayoutParams params;
         //Tablet Landscape is above the bottom screen
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                softkeyBarHeight,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    softkeyBarHeight,
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+        } else {
+            params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    softkeyBarHeight,
+                    WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+        }
+
         params.windowAnimations = android.R.style.Animation_InputMethod;
         params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
         params.x = 0;

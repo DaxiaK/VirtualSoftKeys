@@ -2,6 +2,7 @@ package tw.com.daxia.virtualsoftkeys.service.view;
 
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -67,12 +68,12 @@ public class TouchEventView implements View.OnTouchListener {
         if (isPortrait) {
             miniTouchGestureHeight = SPFManager.getTouchviewPortraitHeight(accessibilityService) / MINI_TOUCH_GESTURE_HIEGHT_SENSITIVITY;
             //transparent color
-            windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewPortraitHeight(accessibilityService),
+            windowManager.addView(touchView, createTouchViewParams(SPFManager.getTouchviewPortraitHeight(accessibilityService),
                     SPFManager.getTouchviewPortraitWidth(accessibilityService), SPFManager.getTouchviewPortraitPosition(accessibilityService)));
         } else {
             miniTouchGestureHeight = SPFManager.getTouchviewLandscapeHeight(accessibilityService) / MINI_TOUCH_GESTURE_HIEGHT_SENSITIVITY;
             //transparent color
-            windowManager.addView(touchView, createTouchViewParms(SPFManager.getTouchviewLandscapeHeight(accessibilityService),
+            windowManager.addView(touchView, createTouchViewParams(SPFManager.getTouchviewLandscapeHeight(accessibilityService),
                     SPFManager.getTouchviewLandscapeWidth(accessibilityService), SPFManager.getTouchviewLandscapePosition(accessibilityService)));
         }
 
@@ -82,13 +83,23 @@ public class TouchEventView implements View.OnTouchListener {
         windowManager.updateViewLayout(touchView, params);
     }
 
-    private WindowManager.LayoutParams createTouchViewParms(int heightPx, int weightPx, int position) {
-        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                weightPx,
-                heightPx,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+    private WindowManager.LayoutParams createTouchViewParams(int heightPx, int weightPx, int position) {
+        WindowManager.LayoutParams params;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            params = new WindowManager.LayoutParams(
+                    weightPx,
+                    heightPx,
+                    WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+        } else {
+            params = new WindowManager.LayoutParams(
+                    weightPx,
+                    heightPx,
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    PixelFormat.TRANSLUCENT);
+        }
         params.gravity = Gravity.BOTTOM | Gravity.LEFT;
         params.x = position;
         params.y = 0;
