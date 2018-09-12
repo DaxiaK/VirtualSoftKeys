@@ -14,7 +14,7 @@ If you have any idea for any thing, please let me know!
 *  Support stylus
 
 
-##Todo
+## Todo
 1. More setting at  navigation bar and touch view
 2. More color and icon for choice
 3. Add teaching page
@@ -39,7 +39,7 @@ You can restart accessibilty service to solving all bug !
 ![](/screenshot/3.png) 
 
 
-##APK
+## APK
 [![](/screenshot/google-play-badge.png) ](https://play.google.com/store/apps/details?id=tw.com.daxia.virtualsoftkeys)
 
 
