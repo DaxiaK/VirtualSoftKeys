@@ -21,7 +21,7 @@ import tw.com.daxia.virtualsoftkeys.R;
  * Created by daxia on 2016/11/25.
  */
 
-public class ColorPickerFragment extends DialogFragment implements View.OnClickListener {
+public class ColorPickerDialogFragment extends DialogFragment implements View.OnClickListener {
 
 
     public interface colorPickerCallback {
@@ -38,9 +38,9 @@ public class ColorPickerFragment extends DialogFragment implements View.OnClickL
     private colorPickerCallback callback;
 
 
-    public static ColorPickerFragment newInstance(int oldColor) {
+    public static ColorPickerDialogFragment newInstance(int oldColor) {
         Bundle args = new Bundle();
-        ColorPickerFragment fragment = new ColorPickerFragment();
+        ColorPickerDialogFragment fragment = new ColorPickerDialogFragment();
         args.putInt("oldColor", oldColor);
         fragment.setArguments(args);
         return fragment;
@@ -86,7 +86,7 @@ public class ColorPickerFragment extends DialogFragment implements View.OnClickL
             callback = (colorPickerCallback) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement colorPickerCallback");
         }
     }
 

@@ -31,7 +31,8 @@
     <string name="config_name_title">觸碰設定檔:</string>
     <string name="config_name_portrait">直立螢幕</string>
     <string name="config_name_landscape">橫式螢幕</string>
-    <string name="config_shared_title">共同設定</string>
+    <string name="config_touch_title">觸碰設定</string>
+    <string name="config_fuuchion_title">功能設定</string>
     <string name="config_disappear_time_title">消失時間:</string>
     <string name="config_disappear_time_content">Softkey bar消失的時間</string>
 

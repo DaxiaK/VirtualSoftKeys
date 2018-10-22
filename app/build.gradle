@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.0'
 
     defaultConfig {
         applicationId "tw.com.daxia.virtualsoftkeys"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 10
         versionName "0.2.0.180212.1"
     }
@@ -21,9 +22,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.larswerkman:HoloColorPicker:1.5'
+    implementation 'com.android.support:design:28.0.0'
 
     //For Test
     testImplementation 'junit:junit:4.12'
@@ -36,5 +37,12 @@ dependencies {
     // ButterKnife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    //lib
+    implementation 'com.larswerkman:HoloColorPicker:1.5'
+
+}
+repositories {
+    mavenCentral()
 }

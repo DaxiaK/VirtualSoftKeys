@@ -32,7 +32,8 @@
     <string name="config_name_title">Config:</string>
     <string name="config_name_portrait">Portrait</string>
     <string name="config_name_landscape">Landscape</string>
-    <string name="config_shared_title">Shared config</string>
+    <string name="config_touch_title">Touch</string>
+    <string name="config_fuuchion_title">Function</string>
     <string name="config_disappear_time_title">Disappear:</string>
     <string name="config_disappear_time_content">Time for disappearing Softkey bar</string>
 

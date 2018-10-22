@@ -13,7 +13,7 @@ public class DisappearObj {
     public final static int TIME_NEVER = -1;
     public final static int TIME_NOW = 0;
     public final static int TIME_1S = 1000;
-    public final static int TIME_1_5S =  1500;
+    public final static int TIME_1_5S = 1500;
     public final static int TIME_2S = 2000;
     public final static int TIME_3S = 3000;
     public final static int TIME_4S = 4000;
@@ -38,6 +38,7 @@ public class DisappearObj {
 
     /**
      * Position is form bar_disappear_time.
+     *
      * @param spinnerPosition
      * @return
      */

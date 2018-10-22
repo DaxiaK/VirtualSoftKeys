@@ -1,11 +1,13 @@
 package tw.com.daxia.virtualsoftkeys.common;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 
 /**
  * Created by daxia on 2016/9/23.
@@ -16,12 +18,22 @@ public class ThemeHelper {
     /**
      * It should be return Drawable , or you will get the VerifyError on pre-lollipop devices.
      * See http://stackoverflow.com/questions/31474297/could-not-find-rippledrawable
+     *
      * @param pressedColor
      * @return
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static Drawable getPressedColorRippleDrawable(int pressedColor) {
         return new RippleDrawable(ColorStateList.valueOf(pressedColor), null, null);
+    }
+
+    @ColorInt
+    public static int getColorResource(Context context, int resourceId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getResources().getColor(resourceId, context.getTheme());
+        } else {
+            return context.getResources().getColor(resourceId);
+        }
     }
 
     public static boolean isColorDark(int color) {
