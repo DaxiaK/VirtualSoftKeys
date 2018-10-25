@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,9 @@ import tw.com.daxia.virtualsoftkeys.service.ServiceFloating
 import tw.com.daxia.virtualsoftkeys.ui.ColorPickerDialogFragment
 
 class FunctionConfigFragment : Fragment(){
+
+    private val TAG = "FunctionConfigFragment";
+
 
     companion object {
         fun newInstance(): FunctionConfigFragment {
@@ -36,10 +40,12 @@ class FunctionConfigFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG,"onViewCreated")
         initSharedConfig()
     }
 
     override fun onAttach(context: Context?) {
+        Log.d(TAG,"onAttach")
         super.onAttach(context)
         mainActivity = activity as MainActivity
     }
@@ -97,14 +103,15 @@ class FunctionConfigFragment : Fragment(){
     }
 
     private fun initDisappearSpinner() {
+
         val disappearAdapter = ArrayAdapter(mainActivity, android.R.layout.simple_spinner_dropdown_item,
                 resources.getStringArray(R.array.bar_disappear_time))
-
 
         SP_bar_disappear_time.adapter = disappearAdapter
         SP_bar_disappear_time.setSelection(SPFManager.getDisappearPosition(mainActivity))
         SP_bar_disappear_time.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+
                 var mAccessibilityService: ServiceFloating? = ServiceFloating.getSharedInstance()
                 if (mAccessibilityService != null) {
                     mAccessibilityService.updateDisappearTime(position)

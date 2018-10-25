@@ -45,7 +45,7 @@ public class AboutDialog extends DialogFragment {
         license = new StringBuilder();
         license.append("This project release by APACHE License:\n");
         license.append(
-                new LicenseObj("VirtualSoftKeys", "Daxia", "2016 - 2017", LicenseObj.APACHE)
+                new LicenseObj("VirtualSoftKeys", "Daxia", "2016 - 2018", LicenseObj.APACHE)
                         .getLicense());
         license.append("\nI use some lib from:\n");
         license.append(

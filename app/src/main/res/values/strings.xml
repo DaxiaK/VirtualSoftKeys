@@ -35,7 +35,7 @@
     <string name="config_touch_title">Touch</string>
     <string name="config_fuuchion_title">Function</string>
     <string name="config_disappear_time_title">Disappear:</string>
-    <string name="config_disappear_time_content">Time for disappearing Softkey bar</string>
+    <string name="config_disappear_time_content">Time for disappearing Softkey bar after the others action</string>
 
     <string name="setting_reverse_button_title">Reverse button position:</string>
     <string name="setting_reverse_button_content">To change the back and recent button position</string>

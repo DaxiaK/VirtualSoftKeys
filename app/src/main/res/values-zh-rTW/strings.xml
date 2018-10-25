@@ -34,7 +34,7 @@
     <string name="config_touch_title">觸碰設定</string>
     <string name="config_fuuchion_title">功能設定</string>
     <string name="config_disappear_time_title">消失時間:</string>
-    <string name="config_disappear_time_content">Softkey bar消失的時間</string>
+    <string name="config_disappear_time_content">其他操作後Softkey bar自動消失的時間</string>
 
     <string name="setting_reverse_button_title">反轉按鈕位置:</string>
     <string name="setting_reverse_button_content">交換返回跟最近按鈕的的位置</string>

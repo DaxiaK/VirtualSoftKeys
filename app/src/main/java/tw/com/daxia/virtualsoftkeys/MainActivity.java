@@ -27,7 +27,7 @@ import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.common.ThemeHelper;
 import tw.com.daxia.virtualsoftkeys.config.FunctionConfigFragment;
-import tw.com.daxia.virtualsoftkeys.config.TouchConfigFragmnet;
+import tw.com.daxia.virtualsoftkeys.config.TouchConfigFragment;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
 import tw.com.daxia.virtualsoftkeys.ui.AboutDialog;
 import tw.com.daxia.virtualsoftkeys.ui.AccessibilityServiceErrorDialog;
@@ -53,19 +53,6 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     RelativeLayout RLContent;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
-
-//    /*
-//     * UI
-//     */
-//    private SeekBar Seek_touch_area_height, Seek_touch_area_width;
-//    private SeekBar Seek_touch_area_position;
-//    private TextView TV_config_name;
-//    private CheckedTextView CTV_stylus_only_mode,
-//            CTV_reverse_button,
-//            CTV_smart_hidden, CTV_hidden_when_rotate;
-//    private Spinner SP_bar_disappear_time;
-
-//    private ImageView IV_bg_color, IV_my_github;
 
     /*
      * Permission
@@ -249,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     private void initTabloyout() {
         //init viewpager
         tabloyoutFragmentList = new ArrayList<>();
-        tabloyoutFragmentList.add(TouchConfigFragmnet.Companion.newInstance());
+        tabloyoutFragmentList.add(TouchConfigFragment.Companion.newInstance());
         tabloyoutFragmentList.add(FunctionConfigFragment.Companion.newInstance());
         tabloyoutTitleList = new ArrayList<>();
         tabloyoutTitleList.add(getString(R.string.config_touch_title));

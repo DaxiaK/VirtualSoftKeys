@@ -22,9 +22,13 @@ public class SPFManager {
     private static final String CONFIG_L_TOUCHVIEW_WIDTH = "L_TOUCHVIEW_WIDTH";
     private static final String CONFIG_L_TOUCHVIEW_POSITION = "L_TOUCHVIEW_POSITION";
 
-    //Shared config
+    /*
+     *function config
+     */
+
+    /* stylus */
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
-    //Replace it from bg color
+    /* Replace it from bg color */
     private static final String CONFIG_TRANSPARENT_BG = "TRANSPARENT_BG";
     private static final String CONFIG_NVBAR_BG_COLOR = "NVBAR_BG_COLOR";
 
@@ -32,6 +36,10 @@ public class SPFManager {
     private static final String CONFIG_SMART_HIDDEN = "SMART_HIDDEN";
     private static final String CONFIG_ROTATE_HIDDEN = "ROTATE_HIDDEN";
     private static final String CONFIG_REVERSE_BUTTON = "REVERSE_BUTTON";
+
+    /*To select action which user want to start when they long click home button.
+     *It can be Google now , Google assistant or their apk.  */
+    private static final String CONFIG_HOME_LONG_CLICK_START_ACTION = "OME_LONG_CLICK_START_APK";
 
 
     //Description
@@ -159,9 +167,9 @@ public class SPFManager {
     }
 
 
-
     /**
      * Get the disappear time array position
+     *
      * @param context
      * @return
      */
@@ -173,6 +181,7 @@ public class SPFManager {
 
     /**
      * Save the disappear time array position
+     *
      * @param context
      * @param position by bar_disappear_time
      */
@@ -196,7 +205,7 @@ public class SPFManager {
         PE.commit();
     }
 
-  public static boolean getRotateHidden(Context context) {
+    public static boolean getRotateHidden(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         return settings.getBoolean(CONFIG_ROTATE_HIDDEN, false);
     }
@@ -220,6 +229,18 @@ public class SPFManager {
         PE.commit();
     }
 
+    public static String getHomeLongClickStartAction(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        //default run the google app
+        return settings.getString(CONFIG_HOME_LONG_CLICK_START_ACTION, Link.GOOGLE_APP_PACKAGE_NAME);
+    }
+
+    public static void setHomeLongClickStartAction(Context context, String packagenameOrIntent) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putString(CONFIG_HOME_LONG_CLICK_START_ACTION, packagenameOrIntent);
+        PE.commit();
+    }
 
 
     /**

@@ -18,6 +18,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -29,10 +32,12 @@ dependencies {
     //For Test
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.android.support.test:runner:1.0.2'
+    testImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     testImplementation 'org.mockito:mockito-core:2.21.0'
     //robolectric + powermock to mock a android environment
     testImplementation 'org.robolectric:robolectric:3.8'
+    testImplementation 'androidx.test:core:1.0.0-beta02'
 
     // ButterKnife
     implementation 'com.jakewharton:butterknife:8.8.1'

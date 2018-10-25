@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +19,13 @@ import tw.com.daxia.virtualsoftkeys.common.ScreenHepler
 import tw.com.daxia.virtualsoftkeys.common.ThemeHelper
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating
 
-class TouchConfigFragmnet : Fragment() {
+class TouchConfigFragment : Fragment() {
+
+    private val TAG = "TouchConfigFragment";
 
     companion object {
-        fun newInstance(): TouchConfigFragmnet {
-            return TouchConfigFragmnet()
+        fun newInstance(): TouchConfigFragment {
+            return TouchConfigFragment()
         }
     }
 
@@ -139,24 +142,17 @@ class TouchConfigFragmnet : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        Log.d(TAG,"onCreateView")
         return inflater.inflate(R.layout.fragment_touchconfig, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        Log.d(TAG,"onViewCreated")
         initSeekBar()
-
-        Seek_touch_area_height.setOnSeekBarChangeListener(touchviewHeightSeekBarListener);
-        Seek_touch_area_height.isSaveEnabled = false;
-
-        Seek_touch_area_width.setOnSeekBarChangeListener(touchviewWidthSeekBarListener);
-        Seek_touch_area_width.isSaveEnabled = false;
-
-        Seek_touch_area_position.setOnSeekBarChangeListener(touchviewPositionSeekBarListener);
-        Seek_touch_area_position.isSaveEnabled = false;
     }
 
     override fun onAttach(context: Context?) {
+        Log.d(TAG,"onAttach")
         super.onAttach(context)
         mainActivity = activity as MainActivity
     }
@@ -177,6 +173,7 @@ class TouchConfigFragmnet : Fragment() {
 
     private fun initSeekBar() {
         initSeekBarStyle()
+        initSeekBarListener()
         initSeekBarContent()
     }
 
@@ -197,6 +194,17 @@ class TouchConfigFragmnet : Fragment() {
         Seek_touch_area_width.thumb.colorFilter = PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN)
         Seek_touch_area_position.progressDrawable.colorFilter = PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN)
         Seek_touch_area_position.thumb.colorFilter = PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN)
+    }
+
+    private fun initSeekBarListener(){
+        Seek_touch_area_height.setOnSeekBarChangeListener(touchviewHeightSeekBarListener);
+        Seek_touch_area_height.isSaveEnabled = false
+
+        Seek_touch_area_width.setOnSeekBarChangeListener(touchviewWidthSeekBarListener);
+        Seek_touch_area_width.isSaveEnabled = false
+
+        Seek_touch_area_position.setOnSeekBarChangeListener(touchviewPositionSeekBarListener);
+        Seek_touch_area_position.isSaveEnabled = false
     }
 
     private fun initSeekBarContent() {

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -128,6 +129,7 @@ public class TouchEventView implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        Log.e("test","onTouch = " + event);
         if (stylusOnlyMode) {
             if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
                 touchViewTouchEvent(event);

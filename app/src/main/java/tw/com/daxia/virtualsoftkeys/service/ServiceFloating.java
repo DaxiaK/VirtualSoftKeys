@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
@@ -64,7 +65,6 @@ public class ServiceFloating extends AccessibilityService {
     }
 
 
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -85,11 +85,14 @@ public class ServiceFloating extends AccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e("test", "onCreate");
+
     }
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        Log.e("test", "onServiceConnected");
         //init
         sSharedInstance = this;
         disappearObj = new DisappearObj(this);
@@ -97,7 +100,7 @@ public class ServiceFloating extends AccessibilityService {
         rotateHidden = SPFManager.getRotateHidden(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
-       boolean canDrawOverlays = PermissionUtils.checkSystemAlertWindowPermission(this);
+        boolean canDrawOverlays = PermissionUtils.checkSystemAlertWindowPermission(this);
         if (canDrawOverlays) {
             windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
             if (ScreenHepler.isPortrait(getResources())) {
@@ -157,7 +160,7 @@ public class ServiceFloating extends AccessibilityService {
 
     private void initTouchView() {
         touchEventView = new TouchEventView(this);
-        touchEventView.updateParamsForLocation(windowManager,isPortrait);
+        touchEventView.updateParamsForLocation(windowManager, isPortrait);
     }
 
 
@@ -180,16 +183,15 @@ public class ServiceFloating extends AccessibilityService {
             if (position != null) {
                 params.x = position;
             }
-            touchEventView.updateParamsForLocation(windowManager,params);
+            touchEventView.updateParamsForLocation(windowManager, params);
         }
     }
 
     public void refreshSoftKey() {
-        if(softKeyBar!=null){
+        if (softKeyBar != null) {
             softKeyBar.refresh();
         }
     }
-
 
 
     public void updateTouchViewConfigure() {
@@ -222,9 +224,8 @@ public class ServiceFloating extends AccessibilityService {
 
 
     /**
-     * Handler + Runnable
+     * Handler + Runnable to hide SoftKeyBar
      */
-
     public void hiddenSoftKeyBar(boolean now) {
         if (now) {
             softKeyBarHandler.removeCallbacksAndMessages(null);

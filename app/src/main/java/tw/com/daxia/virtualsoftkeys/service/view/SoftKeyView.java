@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
+import tw.com.daxia.virtualsoftkeys.common.Link;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
 
-import static tw.com.daxia.virtualsoftkeys.common.Link.GOOGLE_APP_PACKAGE_NAME;
 import static tw.com.daxia.virtualsoftkeys.common.Link.GOOGLE_PLAY_LINK;
 
 /**
@@ -54,13 +54,11 @@ public abstract class SoftKeyView {
         initBaseViewTheme();
         initTouchEvent();
         setSoftKeyEvent();
-
     }
 
     /*
      * The concrete method
      */
-
 
 
     /**
@@ -71,7 +69,8 @@ public abstract class SoftKeyView {
     /**
      * set the base view theme
      */
-     abstract void initBaseViewTheme();
+    abstract void initBaseViewTheme();
+
     /**
      * set the button
      */
@@ -81,7 +80,6 @@ public abstract class SoftKeyView {
      * Init Touch event for close the softkey bar
      */
     abstract void initTouchEvent();
-
 
 
     public abstract WindowManager.LayoutParams getLayoutParamsForLocation();
@@ -95,7 +93,7 @@ public abstract class SoftKeyView {
      * Get all configure from SPF.
      * It is also for refresh SPF or input new SPF.
      */
-    public void refresh(){
+    public void refresh() {
         loadConfigure();
         initImageButton();
         initBaseViewTheme();
@@ -144,18 +142,26 @@ public abstract class SoftKeyView {
                         }
                     }
                 } else if (v.getId() == IB_button_home.getId()) {
-                    Intent intent = accessibilityService.getPackageManager().getLaunchIntentForPackage(GOOGLE_APP_PACKAGE_NAME);
-                    if (intent != null) {
-                        // We found the activity now start the activity
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    String action = SPFManager.getHomeLongClickStartAction(accessibilityService);
+                    Intent intent;
+                    if (action.equals(Intent.ACTION_VOICE_COMMAND)) {
+                        intent = new Intent(Intent.ACTION_VOICE_COMMAND);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         accessibilityService.startActivity(intent);
                     } else {
-                        // Bring user to the market or let them choose an app?
-                        intent = new Intent(Intent.ACTION_VIEW);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        intent.setData(Uri.parse(GOOGLE_PLAY_LINK + GOOGLE_APP_PACKAGE_NAME));
-                        accessibilityService.startActivity(intent);
+                        intent = accessibilityService.getPackageManager().getLaunchIntentForPackage(Link.GOOGLE_APP_PACKAGE_NAME);
+                        if (intent != null) {
+                            // We found the activity now start the activity
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            accessibilityService.startActivity(intent);
+                        } else {
+                            // Bring user to the market or let them choose an app?
+                            intent = new Intent(Intent.ACTION_VIEW);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                            intent.setData(Uri.parse(GOOGLE_PLAY_LINK + Link.GOOGLE_APP_PACKAGE_NAME));
+                            accessibilityService.startActivity(intent);
+                        }
                     }
 
                 } else if (v.getId() == IB_button_end.getId()) {
