@@ -17,7 +17,14 @@
     <!--Accessibility setting-->
     <string name="action_settings">Turn VirtualSoftKey\'s service on or off, Remember if the service is off you cannot use Soft Key Bar in your app.\n Remember, We care about users privacy and do not collect any data from users, this is an open source project and you can find the URL for the project on the main page.</string>
 
-    <!--main activity-->
+    <!--tablayout & tabs-->
+
+    <string name="config_touch_title">Touch</string>
+    <string name="config_function_title">Function</string>
+    <string name="config_customizedtheme_title">Theme</string>
+
+    <!--touch fragment-->
+
     <string name="setting_gesture_height_title">Gesture height:</string>
     <string name="setting_gesture_height_content">The height of touch area</string>
     <string name="setting_gesture_width_title">Gesture width:</string>
@@ -25,15 +32,16 @@
     <string name="setting_gesture_position_title">Gesture position:</string>
     <string name="setting_gesture_position_content">The position of touch area is</string>
 
+    <string name="config_name_title">Config:</string>
+    <string name="config_name_portrait">Portrait</string>
+    <string name="config_name_landscape">Landscape</string>
+
+    <!--function fragment-->
+
     <string name="setting_stylus_mode_title">Stylus mode:</string>
     <string name="setting_stylus_mode_content">Triggered only from device supports stylus (S Pen,z stylus&#8230;etc)</string>
     <string name="setting_stylus_mode_button">Stylus mode</string>
 
-    <string name="config_name_title">Config:</string>
-    <string name="config_name_portrait">Portrait</string>
-    <string name="config_name_landscape">Landscape</string>
-    <string name="config_touch_title">Touch</string>
-    <string name="config_fuuchion_title">Function</string>
     <string name="config_disappear_time_title">Disappear:</string>
     <string name="config_disappear_time_content">Time for disappearing Softkey bar after the others action</string>
 
@@ -51,6 +59,12 @@
     <string name="setting_rotate_hidden_title">Rotate hidden:</string>
     <string name="setting_rotate_hidden_content">After screen rotate , the Softkey bar will be hidden</string>
     <string name="setting_rotate_hidden_button">Rotate hidden</string>
+
+    <!--theme fragment-->
+    <string name="theme_longclick_action_title">Long click Home action:</string>
+    <string name="theme_longclick_action_content">To select action which you want to do when you long click home button.</string>
+    <string name="theme_longclick_action_google">Google</string>
+    <string name="theme_longclick_action_google_assistant">Google assistant / Google voice</string>
 
     <!--Description Dialog-->
     <string name="description_howtouse_title">How to use</string>

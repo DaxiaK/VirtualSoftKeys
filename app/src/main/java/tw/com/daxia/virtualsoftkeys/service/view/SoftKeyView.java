@@ -144,24 +144,30 @@ public abstract class SoftKeyView {
                 } else if (v.getId() == IB_button_home.getId()) {
                     String action = SPFManager.getHomeLongClickStartAction(accessibilityService);
                     Intent intent;
-                    if (action.equals(Intent.ACTION_VOICE_COMMAND)) {
-                        intent = new Intent(Intent.ACTION_VOICE_COMMAND);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        accessibilityService.startActivity(intent);
-                    } else {
-                        intent = accessibilityService.getPackageManager().getLaunchIntentForPackage(Link.GOOGLE_APP_PACKAGE_NAME);
-                        if (intent != null) {
-                            // We found the activity now start the activity
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    switch (action) {
+                        case Link.GOOGLE_APP_PACKAGE_NAME:
+                            intent = accessibilityService.getPackageManager().getLaunchIntentForPackage(Link.GOOGLE_APP_PACKAGE_NAME);
+                            if (intent != null) {
+                                // We found the activity now start the activity
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                accessibilityService.startActivity(intent);
+                            } else {
+                                // Bring user to the market or let them choose an app?
+                                intent = new Intent(Intent.ACTION_VIEW);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                intent.setData(Uri.parse(GOOGLE_PLAY_LINK + Link.GOOGLE_APP_PACKAGE_NAME));
+                                accessibilityService.startActivity(intent);
+                            }
+                            break;
+                        case Intent.ACTION_VOICE_COMMAND:
+                            intent = new Intent(Intent.ACTION_VOICE_COMMAND);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             accessibilityService.startActivity(intent);
-                        } else {
-                            // Bring user to the market or let them choose an app?
-                            intent = new Intent(Intent.ACTION_VIEW);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                            intent.setData(Uri.parse(GOOGLE_PLAY_LINK + Link.GOOGLE_APP_PACKAGE_NAME));
-                            accessibilityService.startActivity(intent);
-                        }
+                            break;
+                        default:
+                            //Launch APK
+                            break;
                     }
 
                 } else if (v.getId() == IB_button_end.getId()) {

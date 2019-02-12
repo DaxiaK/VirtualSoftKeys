@@ -26,6 +26,7 @@ import tw.com.daxia.virtualsoftkeys.common.PermissionUtils;
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
 import tw.com.daxia.virtualsoftkeys.common.ScreenHepler;
 import tw.com.daxia.virtualsoftkeys.common.ThemeHelper;
+import tw.com.daxia.virtualsoftkeys.config.CustomizedThemeFragment;
 import tw.com.daxia.virtualsoftkeys.config.FunctionConfigFragment;
 import tw.com.daxia.virtualsoftkeys.config.TouchConfigFragment;
 import tw.com.daxia.virtualsoftkeys.service.ServiceFloating;
@@ -64,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
      * viewpager + Fragment
      */
     private MainFragmentPagerAdapter pagerAdapter;
-    private List<Fragment> tabloyoutFragmentList;
-    private List<String> tabloyoutTitleList;
+    private List<Fragment> tablayoutFragmentList;
+    private List<String> tablayoutTitleList;
 
     /*
      * Dialog
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         }
         //Init UI
         initUIStyle();
-        initTabloyout();
+        initTablayout();
         //Init shared setting
         //initSharedConfig();
         //Show Description Dialog
@@ -233,16 +234,19 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
         ViewTouchviewer.setBackgroundColor(configColor);
     }
 
-    private void initTabloyout() {
+    private void initTablayout() {
         //init viewpager
-        tabloyoutFragmentList = new ArrayList<>();
-        tabloyoutFragmentList.add(TouchConfigFragment.Companion.newInstance());
-        tabloyoutFragmentList.add(FunctionConfigFragment.Companion.newInstance());
-        tabloyoutTitleList = new ArrayList<>();
-        tabloyoutTitleList.add(getString(R.string.config_touch_title));
-        tabloyoutTitleList.add(getString(R.string.config_fuuchion_title));
+        tablayoutFragmentList = new ArrayList<>();
+        tablayoutFragmentList.add(TouchConfigFragment.Companion.newInstance());
+        tablayoutFragmentList.add(FunctionConfigFragment.Companion.newInstance());
+        tablayoutFragmentList.add(CustomizedThemeFragment.Companion.newInstance());
 
-        pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), tabloyoutFragmentList, tabloyoutTitleList);
+        tablayoutTitleList = new ArrayList<>();
+        tablayoutTitleList.add(getString(R.string.config_touch_title));
+        tablayoutTitleList.add(getString(R.string.config_function_title));
+        tablayoutTitleList.add(getString(R.string.config_customizedtheme_title));
+
+        pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), tablayoutFragmentList, tablayoutTitleList);
         tablayout.setTabMode(TabLayout.MODE_FIXED);
         viewpager.setAdapter(pagerAdapter);
         tablayout.setupWithViewPager(viewpager);
@@ -278,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements ColorPickerDialog
     @Override
     public void onColorChange(int colorCode) {
         //Communicating with Other Fragments
-        Fragment functionFragment = tabloyoutFragmentList.get(2);
+        Fragment functionFragment = tablayoutFragmentList.get(2);
         if (functionFragment instanceof FunctionConfigFragment) {
             ((FunctionConfigFragment) functionFragment).onColorChange(colorCode);
         }

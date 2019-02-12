@@ -21,7 +21,7 @@ import tw.com.daxia.virtualsoftkeys.service.ServiceFloating
 
 class TouchConfigFragment : Fragment() {
 
-    private val TAG = "TouchConfigFragment";
+    private val TAG = "TouchConfigFragment"
 
     companion object {
         fun newInstance(): TouchConfigFragment {

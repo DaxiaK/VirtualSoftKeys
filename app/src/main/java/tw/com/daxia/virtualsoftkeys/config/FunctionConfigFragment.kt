@@ -22,8 +22,7 @@ import tw.com.daxia.virtualsoftkeys.ui.ColorPickerDialogFragment
 
 class FunctionConfigFragment : Fragment(){
 
-    private val TAG = "FunctionConfigFragment";
-
+    private val TAG = "FunctionConfigFragment"
 
     companion object {
         fun newInstance(): FunctionConfigFragment {

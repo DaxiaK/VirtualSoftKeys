@@ -136,7 +136,7 @@ public class ServiceFloating extends AccessibilityService {
                     && softKeyBar != null) {
                 softKeyBar.getBaseView().setVisibility(View.GONE);
             }
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             //do nothing
         }

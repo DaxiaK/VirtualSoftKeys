@@ -16,23 +16,27 @@
     <!--Accessibility setting-->
     <string name="action_settings">使用此開關來打開或關閉VirtualSoftKey的服務，再打開前請先確認你已授權允許繪製的權限！\n如果有安全上的疑慮，請不用擔心！\n此APP沒有任何的網路權限，亦即無法蒐集你的任何資料，你可以在設定頁面找到此專案的開源位置！</string>
 
-    <!--main activity-->
+    <!--tablayout & tabs-->
+    <string name="config_touch_title">觸碰設定</string>
+    <string name="config_function_title">功能設定</string>
+
+    <!--touch fragment-->
     <string name="setting_gesture_height_title">手勢區域高度:</string>
     <string name="setting_gesture_height_content">用來觸發手勢的區域高度</string>
     <string name="setting_gesture_width_title">手勢區域寬度:</string>
     <string name="setting_gesture_width_content">用來觸發手勢的區域寬度</string>
     <string name="setting_gesture_position_title">手勢區域位置:</string>
     <string name="setting_gesture_position_content">用來觸發手勢的區域位置</string>
+    <string name="config_name_title">觸碰設定檔:</string>
+    <string name="config_name_portrait">直立螢幕</string>
+    <string name="config_name_landscape">橫式螢幕</string>
 
+    <!--function fragment-->
     <string name="setting_stylus_mode_title">觸控筆模式:</string>
     <string name="setting_stylus_mode_content">只允許系統支援的觸控筆觸發手勢 (S Pen,z stylus&#8230;etc)</string>
     <string name="setting_stylus_mode_button">觸控筆模式</string>
 
-    <string name="config_name_title">觸碰設定檔:</string>
-    <string name="config_name_portrait">直立螢幕</string>
-    <string name="config_name_landscape">橫式螢幕</string>
-    <string name="config_touch_title">觸碰設定</string>
-    <string name="config_fuuchion_title">功能設定</string>
+    <string name="config_customizedtheme_title">主題設定</string>
     <string name="config_disappear_time_title">消失時間:</string>
     <string name="config_disappear_time_content">其他操作後Softkey bar自動消失的時間</string>
 
@@ -50,6 +54,12 @@
     <string name="setting_rotate_hidden_title">旋轉隱藏:</string>
     <string name="setting_rotate_hidden_content">在螢幕方向改變後自動隱藏Softkey bar</string>
     <string name="setting_rotate_hidden_button">旋轉隱藏</string>
+
+    <!--theme fragment-->
+    <string name="theme_longclick_action_title">長按Home鍵指令:</string>
+    <string name="theme_longclick_action_content">在長按Home鍵後執行的指令</string>
+    <string name="theme_longclick_action_google">Google</string>
+    <string name="theme_longclick_action_google_assistant">Google assistant / Google voice</string>
 
     <!--Description Dialog-->
     <string name="description_howtouse_title">如何使用</string>
